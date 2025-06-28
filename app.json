@@ -9,14 +9,16 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.kenreactpoc"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.kenreactpoc"
     },
     "web": {
       "bundler": "metro",
@@ -24,6 +26,11 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      ["@kingstinct/react-native-healthkit", {
+        "NSHealthShareUsageDescription": "This app needs access to your health data to track your steps and other health metrics.",
+        "NSHealthUpdateUsageDescription": "This app needs access to your health data to update your health data.",
+        "background" : true
+      }],
       "expo-router",
       [
         "expo-splash-screen",
