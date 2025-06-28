@@ -15,13 +15,15 @@ export default function Index() {
     ['HKQuantityTypeIdentifierStepCount'] //write steps only
   );
 
-  //get the most recent data (only works after authorization
+  //get the most recent data (only works after authorization)
   const stepData = useMostRecentQuantitySample('HKQuantityTypeIdentifierStepCount');
   const heartRateData = useMostRecentQuantitySample('HKQuantityTypeIdentifierHeartRate');
 
   const requestPermissions = async () => {
     const status = await requestAuth();
     console.log("Authorization status:", status);
+    console.log("Step Data:", stepData);
+    console.log("Heart Rate Data:", heartRateData);
   };
 
   
