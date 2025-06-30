@@ -1,41 +1,34 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import { isHealthDataAvailable,
-  useHealthkitAuthorization,
-  useMostRecentQuantitySample,
-  AuthorizationRequestStatus,
-  getMostRecentQuantitySample,
-  QuantitySample
- } from '@kingstinct/react-native-healthkit';
+import { useHealthService } from './services/HealthService.ios';
+import type { HealthData } from './services/HealthServices.types';
 
 export default function Index() {
-  const isAvailable = isHealthDataAvailable();
-  console.log("Health Data is being read", isAvailable);
-  //utilizing hooks instead of imperative api, as there is built in stage management
-  // Read-only permissions
-
-  const [authStatus, requestAuth] = useHealthkitAuthorization(
-    ['HKQuantityTypeIdentifierStepCount', 'HKQuantityTypeIdentifierHeartRate'], //read
-    ['HKQuantityTypeIdentifierStepCount'] //write steps only
-  );
-
-  //get the most recent data (only works after authorization) 
-  const stepData = useMostRecentQuantitySample('HKQuantityTypeIdentifierStepCount');
-  const heartRateData = useMostRecentQuantitySample('HKQuantityTypeIdentifierHeartRate');
+  const {
+    isAvailable,
+    authStatus,
+    requestAuth,
+    stepData,
+    heartRateData,
+    getMostRecentData,
+    AuthorizationRequestStatus
+  } = useHealthService();
   
-  const [manualStepData, setManualStepData] = useState<QuantitySample | undefined>(undefined);
-  const [manualHeartRateData, setManualHeartRateData] = useState<QuantitySample | undefined>(undefined);
+  console.log("Health Data is being read", isAvailable);
+  
+  const [manualHealthData, setManualHealthData] = useState<HealthData | undefined>(undefined);
 
   const refetchData = async () => {
-    const steps = await getMostRecentQuantitySample('HKQuantityTypeIdentifierStepCount');
-    const heartRate = await getMostRecentQuantitySample('HKQuantityTypeIdentifierHeartRate');
-    setManualStepData(steps);
-    setManualHeartRateData(heartRate);
+    const data = await getMostRecentData();
+    setManualHealthData(data);
   };
+
+  console.log("Authorization Status:", authStatus);
 
   useEffect(() => {
     if (authStatus === AuthorizationRequestStatus.unnecessary) {
       console.log("Permissions granted, refetching data");
+      console.log("Authorization Status:", authStatus);
       refetchData();
     }
   }, [authStatus]);
@@ -54,10 +47,10 @@ export default function Index() {
       <Text style={Styles.title}>Health Data Access version 3</Text>
       <Text style={Styles.status}>Authorization Status: {authStatus}</Text>
       <Text style={Styles.dataDisplay}>
-        Step Count: {manualStepData?.quantity || stepData?.quantity}
+        Step Count: {manualHealthData?.steps?.quantity || stepData?.quantity}
       </Text>
       <Text style={Styles.dataDisplay}>
-        Heart Rate: {manualHeartRateData?.quantity || heartRateData?.quantity}
+        Heart Rate: {manualHealthData?.heartRate?.quantity || heartRateData?.quantity}
       </Text>
       <TouchableOpacity style={Styles.button} onPress={requestPermissions}>
         <Text style={Styles.buttonText}>Request Permissions</Text>
