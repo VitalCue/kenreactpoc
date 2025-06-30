@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		58C9F5B45F98DEA5B03DB85A /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA782F7AB5F090AE084CB8D1 /* ExpoModulesProvider.swift */; };
-		8ED44513D9F4DD73C8B5D463 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D1453C21F76B43C5BD41A4BC /* PrivacyInfo.xcprivacy */; };
-		AA1CA413BAEA2F5E6EFD91C1 /* libPods-kenreactpoc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EAB0731783A97D54CB828CDD /* libPods-kenreactpoc.a */; };
+		7B26109E9F3D54575131601E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EA8B5DABA60EBAAD88E6E5FD /* PrivacyInfo.xcprivacy */; };
+		83C055A7D418975A26934F4F /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77F7B0728ECEC772BF8210A /* ExpoModulesProvider.swift */; };
+		9DD417CB043AA423729479FC /* libPods-kenreactpoc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0712BA4108963484FEA19DC /* libPods-kenreactpoc.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -20,16 +20,16 @@
 		13B07F961A680F5B00A75B9A /* kenreactpoc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kenreactpoc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = kenreactpoc/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = kenreactpoc/Info.plist; sourceTree = "<group>"; };
-		A0FB88AA0C8A082FC9203DA5 /* Pods-kenreactpoc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kenreactpoc.debug.xcconfig"; path = "Target Support Files/Pods-kenreactpoc/Pods-kenreactpoc.debug.xcconfig"; sourceTree = "<group>"; };
+		49AC7B600947CED478DDF851 /* Pods-kenreactpoc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kenreactpoc.release.xcconfig"; path = "Target Support Files/Pods-kenreactpoc/Pods-kenreactpoc.release.xcconfig"; sourceTree = "<group>"; };
+		A0712BA4108963484FEA19DC /* libPods-kenreactpoc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kenreactpoc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = kenreactpoc/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		D1453C21F76B43C5BD41A4BC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = kenreactpoc/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		E3CEE44F99B1AA3C10B1032D /* Pods-kenreactpoc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kenreactpoc.release.xcconfig"; path = "Target Support Files/Pods-kenreactpoc/Pods-kenreactpoc.release.xcconfig"; sourceTree = "<group>"; };
-		EAB0731783A97D54CB828CDD /* libPods-kenreactpoc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kenreactpoc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C77F7B0728ECEC772BF8210A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-kenreactpoc/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		E6F734E5055CB6DB7ACF161B /* Pods-kenreactpoc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kenreactpoc.debug.xcconfig"; path = "Target Support Files/Pods-kenreactpoc/Pods-kenreactpoc.debug.xcconfig"; sourceTree = "<group>"; };
+		EA8B5DABA60EBAAD88E6E5FD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = kenreactpoc/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = kenreactpoc/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* kenreactpoc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "kenreactpoc-Bridging-Header.h"; path = "kenreactpoc/kenreactpoc-Bridging-Header.h"; sourceTree = "<group>"; };
-		FA782F7AB5F090AE084CB8D1 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-kenreactpoc/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,21 +37,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA1CA413BAEA2F5E6EFD91C1 /* libPods-kenreactpoc.a in Frameworks */,
+				9DD417CB043AA423729479FC /* libPods-kenreactpoc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		11B0F7706E07058306D7F527 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				8655B64B5D2588919349CA83 /* kenreactpoc */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* kenreactpoc */ = {
 			isa = PBXGroup;
 			children = (
@@ -61,7 +53,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				D1453C21F76B43C5BD41A4BC /* PrivacyInfo.xcprivacy */,
+				EA8B5DABA60EBAAD88E6E5FD /* PrivacyInfo.xcprivacy */,
 			);
 			name = kenreactpoc;
 			sourceTree = "<group>";
@@ -70,9 +62,17 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				EAB0731783A97D54CB828CDD /* libPods-kenreactpoc.a */,
+				A0712BA4108963484FEA19DC /* libPods-kenreactpoc.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4F77123C30FBD01CFB1B24DE /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				E13C0E32072E247A0B685D38 /* kenreactpoc */,
+			);
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -89,8 +89,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				9F431376CEFD388C95C8FEFE /* Pods */,
-				11B0F7706E07058306D7F527 /* ExpoModulesProviders */,
+				CAD4D8986DCA54F339E77A3A /* Pods */,
+				4F77123C30FBD01CFB1B24DE /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -105,23 +105,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8655B64B5D2588919349CA83 /* kenreactpoc */ = {
-			isa = PBXGroup;
-			children = (
-				FA782F7AB5F090AE084CB8D1 /* ExpoModulesProvider.swift */,
-			);
-			name = kenreactpoc;
-			sourceTree = "<group>";
-		};
-		9F431376CEFD388C95C8FEFE /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				A0FB88AA0C8A082FC9203DA5 /* Pods-kenreactpoc.debug.xcconfig */,
-				E3CEE44F99B1AA3C10B1032D /* Pods-kenreactpoc.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +112,24 @@
 			);
 			name = Supporting;
 			path = kenreactpoc/Supporting;
+			sourceTree = "<group>";
+		};
+		CAD4D8986DCA54F339E77A3A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E6F734E5055CB6DB7ACF161B /* Pods-kenreactpoc.debug.xcconfig */,
+				49AC7B600947CED478DDF851 /* Pods-kenreactpoc.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		E13C0E32072E247A0B685D38 /* kenreactpoc */ = {
+			isa = PBXGroup;
+			children = (
+				C77F7B0728ECEC772BF8210A /* ExpoModulesProvider.swift */,
+			);
+			name = kenreactpoc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "kenreactpoc" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				5360BC30C74BB3F3818D01E4 /* [Expo] Configure project */,
+				4FEC715DE1749296EEC5ED2E /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				CAD899B561E0F54F579670DE /* [CP] Embed Pods Frameworks */,
+				6212CBBA9F8BE1D7ECDB6CE6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -166,6 +167,8 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1250;
+						DevelopmentTeam = "PVR68ZH69H";
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -195,7 +198,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				8ED44513D9F4DD73C8B5D463 /* PrivacyInfo.xcprivacy in Resources */,
+				7B26109E9F3D54575131601E /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,7 +242,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5360BC30C74BB3F3818D01E4 /* [Expo] Configure project */ = {
+		4FEC715DE1749296EEC5ED2E /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -257,6 +260,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-kenreactpoc/expo-configure-project.sh\"\n";
+		};
+		6212CBBA9F8BE1D7ECDB6CE6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-kenreactpoc/Pods-kenreactpoc-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kenreactpoc/Pods-kenreactpoc-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -294,24 +315,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kenreactpoc/Pods-kenreactpoc-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CAD899B561E0F54F579670DE /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-kenreactpoc/Pods-kenreactpoc-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-kenreactpoc/Pods-kenreactpoc-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -320,7 +323,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				58C9F5B45F98DEA5B03DB85A /* ExpoModulesProvider.swift in Sources */,
+				83C055A7D418975A26934F4F /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,13 +332,12 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A0FB88AA0C8A082FC9203DA5 /* Pods-kenreactpoc.debug.xcconfig */;
+			baseConfigurationReference = E6F734E5055CB6DB7ACF161B /* Pods-kenreactpoc.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = kenreactpoc/kenreactpoc.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PVR68ZH69H;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -355,24 +357,26 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.anonymous.kenreactpoc;
-				PRODUCT_NAME = "kenreactpoc";
+				PRODUCT_NAME = kenreactpoc;
 				SWIFT_OBJC_BRIDGING_HEADER = "kenreactpoc/kenreactpoc-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
+				DEVELOPMENT_TEAM = "PVR68ZH69H";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 			};
 			name = Debug;
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E3CEE44F99B1AA3C10B1032D /* Pods-kenreactpoc.release.xcconfig */;
+			baseConfigurationReference = 49AC7B600947CED478DDF851 /* Pods-kenreactpoc.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = kenreactpoc/kenreactpoc.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PVR68ZH69H;
 				INFOPLIST_FILE = kenreactpoc/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -387,11 +391,14 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.anonymous.kenreactpoc;
-				PRODUCT_NAME = "kenreactpoc";
+				PRODUCT_NAME = kenreactpoc;
 				SWIFT_OBJC_BRIDGING_HEADER = "kenreactpoc/kenreactpoc-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
+				DEVELOPMENT_TEAM = "PVR68ZH69H";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 			};
 			name = Release;
 		};
@@ -450,7 +457,10 @@
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -505,7 +515,10 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

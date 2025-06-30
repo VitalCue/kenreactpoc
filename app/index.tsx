@@ -1,7 +1,11 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { useEffect, useState } from "react";
 import { isHealthDataAvailable,
   useHealthkitAuthorization,
-  useMostRecentQuantitySample
+  useMostRecentQuantitySample,
+  AuthorizationRequestStatus,
+  getMostRecentQuantitySample,
+  QuantitySample
  } from '@kingstinct/react-native-healthkit';
 
 export default function Index() {
@@ -15,27 +19,45 @@ export default function Index() {
     ['HKQuantityTypeIdentifierStepCount'] //write steps only
   );
 
-  //get the most recent data (only works after authorization)
+  //get the most recent data (only works after authorization) 
   const stepData = useMostRecentQuantitySample('HKQuantityTypeIdentifierStepCount');
   const heartRateData = useMostRecentQuantitySample('HKQuantityTypeIdentifierHeartRate');
+  
+  const [manualStepData, setManualStepData] = useState<QuantitySample | undefined>(undefined);
+  const [manualHeartRateData, setManualHeartRateData] = useState<QuantitySample | undefined>(undefined);
+
+  const refetchData = async () => {
+    const steps = await getMostRecentQuantitySample('HKQuantityTypeIdentifierStepCount');
+    const heartRate = await getMostRecentQuantitySample('HKQuantityTypeIdentifierHeartRate');
+    setManualStepData(steps);
+    setManualHeartRateData(heartRate);
+  };
+
+  useEffect(() => {
+    if (authStatus === AuthorizationRequestStatus.unnecessary) {
+      console.log("Permissions granted, refetching data");
+      refetchData();
+    }
+  }, [authStatus]);
 
   const requestPermissions = async () => {
     const status = await requestAuth();
     console.log("Authorization status:", status);
     console.log("Step Data:", stepData);
     console.log("Heart Rate Data:", heartRateData);
+
   };
 
   
   return (
     <View style={Styles.container}>
-      <Text style={Styles.title}>Health Data Access</Text>
+      <Text style={Styles.title}>Health Data Access version 3</Text>
       <Text style={Styles.status}>Authorization Status: {authStatus}</Text>
       <Text style={Styles.dataDisplay}>
-        Step Count: {stepData?.quantity}
+        Step Count: {manualStepData?.quantity || stepData?.quantity}
       </Text>
       <Text style={Styles.dataDisplay}>
-        Heart Rate: {heartRateData?.quantity}
+        Heart Rate: {manualHeartRateData?.quantity || heartRateData?.quantity}
       </Text>
       <TouchableOpacity style={Styles.button} onPress={requestPermissions}>
         <Text style={Styles.buttonText}>Request Permissions</Text>
@@ -78,4 +100,3 @@ const Styles = StyleSheet.create({
     color: '#333',
   }
 });
-
