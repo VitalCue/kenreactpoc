@@ -1,46 +1,47 @@
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { useEffect, useState } from "react";
 import { useHealthService } from './services/HealthService.ios';
 import type { HealthData } from './services/HealthServices.types';
 
 export default function Index() {
-  const {
-    isAvailable,
-    authStatus,
-    requestAuth,
-    stepData,
-    heartRateData,
-    getMostRecentData,
-    AuthorizationRequestStatus
-  } = useHealthService();
-  
-  console.log("Health Data is being read", isAvailable);
-  
-  const [manualHealthData, setManualHealthData] = useState<HealthData | undefined>(undefined);
+  if (Platform.OS == "ios") {
+    const {
+      isAvailable,
+      authStatus,
+      requestAuth,
+      stepData,
+      heartRateData,
+      getMostRecentData,
+      AuthorizationRequestStatus
+    } = useHealthService();
+    
+    console.log("Health Data is being read", isAvailable);
+    
+    const [manualHealthData, setManualHealthData] = useState<HealthData | undefined>(undefined);
 
-  const refetchData = async () => {
-    const data = await getMostRecentData();
-    setManualHealthData(data);
-  };
+    const refetchData = async () => {
+      const data = await getMostRecentData();
+      setManualHealthData(data);
+    };
 
-  console.log("Authorization Status:", authStatus);
+    console.log("Authorization Status:", authStatus);
 
-  useEffect(() => {
-    if (authStatus === AuthorizationRequestStatus.unnecessary) {
-      console.log("Permissions granted, refetching data");
-      console.log("Authorization Status:", authStatus);
-      refetchData();
-    }
-  }, [authStatus]);
+    useEffect(() => {
+      if (authStatus === AuthorizationRequestStatus.unnecessary) {
+        console.log("Permissions granted, refetching data");
+        console.log("Authorization Status:", authStatus);
+        refetchData();
+      }
+    }, [authStatus]);
 
-  const requestPermissions = async () => {
-    const status = await requestAuth();
-    console.log("Authorization status:", status);
-    console.log("Step Data:", stepData);
-    console.log("Heart Rate Data:", heartRateData);
+    const requestPermissions = async () => {
+      const status = await requestAuth();
+      console.log("Authorization status:", status);
+      console.log("Step Data:", stepData);
+      console.log("Heart Rate Data:", heartRateData);
 
-  };
-
+    };
+  }
   
   return (
     <View style={Styles.container}>
