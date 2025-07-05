@@ -18,7 +18,19 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.kenreactpoc"
+      "package": "com.anonymous.kenreactpoc",
+      "permissions": [
+        "android.permission.health.READ_STEPS",
+        "android.permission.health.READ_HEART_RATE",
+        "android.permission.health.READ_RESTING_HEART_RATE",
+        "android.permission.health.READ_ACTIVE_CALORIES_BURNED",
+        "android.permission.health.READ_EXERCISE",
+        "android.permission.health.READ_FLOORS_CLIMBED",
+        "android.permission.health.READ_HEIGHT",
+        "android.permission.health.READ_WEIGHT",
+        "android.permission.health.READ_SPEED",
+        "android.permission.health.READ_FLOORS_CLIMBED"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -26,17 +38,20 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      ["@kingstinct/react-native-healthkit", {
-        "NSHealthShareUsageDescription": "This app needs access to your health data to track your steps and other health metrics.",
-        "NSHealthUpdateUsageDescription": "This app needs access to your health data to update your health data.",
-        "background" : true
-      }],
+      [
+        "@kingstinct/react-native-healthkit",
+        {
+          "NSHealthShareUsageDescription": "This app needs access to your health data to track your steps and other health metrics.",
+          "NSHealthUpdateUsageDescription": "This app needs access to your health data to update your health data.",
+          "background": true
+        }
+      ],
       "expo-health-connect",
       [
         "expo-build-properties",
         {
           "android": {
-            "compileSdkVersion": 34,
+            "compileSdkVersion": 35,
             "targetSdkVersion": 34,
             "minSdkVersion": 26
           }
@@ -55,6 +70,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3daa9fae-d948-4cff-9d37-3158cf88c3f7"
+      }
     }
   }
 }
