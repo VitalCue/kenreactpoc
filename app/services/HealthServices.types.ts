@@ -1,6 +1,12 @@
 import type { AnyMap } from 'react-native-nitro-modules';
 
+
+/*
+    Base type definitions for health dataz
+*/
 // Base unified health data interface
+
+
 export interface HealthDataAdapter {
   // Core fields (normalized across platforms)
   readonly uuid: string;
@@ -44,7 +50,7 @@ export interface AndroidHealthData {
   readonly dataCollector?: AndroidDataCollector;
 }
 
-// Platform-specific complex types
+// -------Platform-specific complex types
 export interface IOSDevice {
   readonly name?: string;
   readonly manufacturer?: string;
@@ -85,23 +91,89 @@ export interface AndroidDataCollector {
   };
 }
 
+
+/*
+
+Query filters for IOS AND ANDROID
+===============================================================
+
+*/
+
+
+// Filter types based on react-native-healthkit
+export type PredicateWithUUID = {
+  readonly uuid: string;
+};
+
+export type PredicateWithUUIDs = {
+  readonly uuids: readonly string[];
+};
+
+export type PredicateWithStartAndEnd = {
+  readonly startDate?: Date;
+  readonly endDate?: Date;
+  readonly strictEndDate?: boolean;
+  readonly strictStartDate?: boolean;
+};
+
+export type PredicateWithMetadataKey = {
+  readonly withMetadataKey: string;
+};
+
+export type FilterForSamplesAnd = {
+  readonly AND: PredicateForSamples[];
+};
+
+export type FilterForSamplesOr = {
+  readonly OR: PredicateForSamples[];
+};
+
+export type PredicateFromWorkout = {
+  readonly workout: any; // WorkoutProxy type from healthkit
+};
+
+export type FilterForSamples = PredicateForSamples | FilterForSamplesAnd | FilterForSamplesOr;
+
+export type PredicateForSamples = 
+  | PredicateWithUUID 
+  | PredicateWithUUIDs 
+  | PredicateWithMetadataKey 
+  | PredicateWithStartAndEnd 
+  | PredicateFromWorkout;
+
+// Generic query options from react-native-healthkit
+export interface GenericQueryOptions {
+  filter?: FilterForSamples;
+  readonly limit?: number;
+}
+
+export interface QueryOptionsWithAnchor extends GenericQueryOptions {
+  readonly anchor?: string;
+}
+
+export interface QueryOptionsWithSortOrder extends GenericQueryOptions {
+  readonly ascending?: boolean;
+}
+
+export interface QueryOptionsWithSortOrderAndUnit extends QueryOptionsWithSortOrder {
+  readonly unit?: string;
+}
+
+export interface QueryOptionsWithAnchorAndUnit extends QueryOptionsWithAnchor {
+  readonly unit?: string;
+}
+
 // Query params with platform awareness
 export interface QueryParams {
-  // Common params
-  startDate: Date;
-  endDate: Date;
+  // Common params - now optional since we can use filters
+  startDate?: Date;
+  endDate?: Date;
   pageSize?: number;
   
-  // Platform-specific query options
-  ios?: {
-    device?: IOSDevice;
-    source?: string; // bundle identifier
-    sortDescriptors?: Array<{
-      key: string;
-      ascending: boolean;
-    }>;
-    predicate?: any; // NSPredicate
-    limit?: number;
+  // iOS-specific query options aligned with react-native-healthkit
+  ios?: QueryOptionsWithSortOrderAndUnit & {
+    filter?: FilterForSamples;
+    anchor?: string; // For pagination
   };
   
   android?: {
@@ -163,6 +235,51 @@ export const isAndroidData = (
 ): data is { platform: 'android'; data: AndroidHealthData } => {
   return data.platform === 'android';
 };
+
+// Filter builder helpers used for IOS
+export const Filters = {
+  // Basic filters
+  uuid: (uuid: string): PredicateWithUUID => ({ uuid }),
+  uuids: (uuids: string[]): PredicateWithUUIDs => ({ uuids }),
+  metadataKey: (key: string): PredicateWithMetadataKey => ({ withMetadataKey: key }),
+  dateRange: (options: {
+    startDate?: Date;
+    endDate?: Date;
+    strictStartDate?: boolean;
+    strictEndDate?: boolean;
+  }): PredicateWithStartAndEnd => options,
+  workout: (workout: any): PredicateFromWorkout => ({ workout }),
+  
+  // Composite filters
+  and: (...predicates: PredicateForSamples[]): FilterForSamplesAnd => ({ AND: predicates }),
+  or: (...predicates: PredicateForSamples[]): FilterForSamplesOr => ({ OR: predicates }),
+  
+  // Common presets
+  today: (): PredicateWithStartAndEnd => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+    return { startDate: start, endDate: end };
+  },
+  
+  lastDays: (days: number): PredicateWithStartAndEnd => {
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - days);
+    return { startDate: start, endDate: end };
+  },
+  
+  excludeManualEntries: (): FilterForSamplesOr => ({
+    OR: [
+      { withMetadataKey: 'HKMetadataKeyDeviceSerialNumber' },
+      { withMetadataKey: 'HKMetadataKeyDigitallySigned' }
+    ]
+  })
+};
+
+//Need to work on a workout adapter function, but we will work on that later
+
 
 // past interface but was meant for apple health kit port
 // export interface QuantitySample {
