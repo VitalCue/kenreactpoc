@@ -18,7 +18,7 @@ export const HealthServiceUtils = {
     };
 
     return await healthService.getBatchData(
-      ['distance', 'calories', 'walkingSpeed', 'runningSpeed'],
+      ['steps', 'distance', 'calories', 'walkingSpeed', 'runningSpeed'],
       params
     );
   },
@@ -39,7 +39,7 @@ export const HealthServiceUtils = {
     };
 
     return await healthService.getBatchData(
-      ['distance', 'calories', 'walkingSpeed', 'runningSpeed'],
+      ['steps', 'distance', 'calories', 'walkingSpeed', 'runningSpeed'],
       params
     );
   },

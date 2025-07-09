@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react';
 import { useHealthService } from './services/HealthService';
 import { HealthServiceUtils } from './services/HealthServiceUtils';
 import { HealthDataAdapter } from './services/HealthServices.types';
+import { useRouter } from 'expo-router';
 
 export default function Index() {
   const healthService = useHealthService();
+  const router = useRouter();
   const [healthData, setHealthData] = useState<Record<string, HealthDataAdapter[]>>({});
   const [healthSummary, setHealthSummary] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -184,6 +186,15 @@ export default function Index() {
               {loading ? 'Loading...' : 'Get Health Summary'}
             </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.button, styles.dashboardButton]} 
+            onPress={() => router.push('./dashboard')}
+          >
+            <Text style={styles.buttonText}>
+              Open Health Dashboard
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {renderHealthData()}
@@ -241,6 +252,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
+  },
+  dashboardButton: {
+    backgroundColor: '#FF6B6B',
   },
   dataContainer: {
     backgroundColor: 'white',
