@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { useState, useEffect } from 'react';
-import { useHealthService, HealthServiceUtils } from './services/HealthService';
+import { useHealthService } from './services/HealthService';
+import { HealthServiceUtils } from './services/HealthServiceUtils';
 import { HealthDataAdapter } from './services/HealthServices.types';
 
 export default function Index() {
@@ -74,7 +75,8 @@ export default function Index() {
       
       const summary = await HealthServiceUtils.getHealthSummary(healthService);
       setHealthSummary(summary);
-      console.log('Health summary:', summary);
+      console.log("HealthSummary", JSON.stringify(summary))
+      
     } catch (err) {
       setError(`Error getting health summary: ${err}`);
     } finally {
