@@ -11,7 +11,7 @@ import Animated, {
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-interface HealthRingProps {
+export interface HealthRingProps {
   value: number;
   maxValue: number;
   size?: number;

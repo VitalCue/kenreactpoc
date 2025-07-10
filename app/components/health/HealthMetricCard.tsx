@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
-interface HealthMetricCardProps {
+export interface HealthMetricCardProps {
   title: string;
   value: string | number;
   unit?: string;

@@ -1,5 +1,5 @@
 // services/HealthServiceUtils.ts
-import { HealthServiceHook } from './HealthServices.types';
+import { HealthServiceHook } from './types';
 
 // Helper utility functions for common health data operations
 export const HealthServiceUtils = {

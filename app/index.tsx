@@ -1,8 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { useState, useEffect } from 'react';
-import { useHealthService } from './services/HealthService';
-import { HealthServiceUtils } from './services/HealthServiceUtils';
-import { HealthDataAdapter } from './services/HealthServices.types';
+import { useHealthService, HealthServiceUtils } from './services/health';
+import type { HealthDataAdapter } from './services/health';
 import { useRouter } from 'expo-router';
 
 export default function Index() {

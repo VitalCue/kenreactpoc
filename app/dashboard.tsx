@@ -9,11 +9,9 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
-import { useHealthService } from './services/HealthService';
-import { HealthServiceUtils } from './services/HealthServiceUtils';
-import { HealthRing } from './components/HealthRing';
-import { HealthMetricCard } from './components/HealthMetricCard';
-import { WeeklyChart } from './components/WeeklyChart';
+import { useHealthService, HealthServiceUtils } from './services/health';
+import { HealthRing, HealthMetricCard } from './components/health';
+import { WeeklyChart } from './components/charts';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function HealthDashboard() {

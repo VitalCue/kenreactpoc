@@ -15,7 +15,24 @@ import {
   AuthorizationRequestStatus,
   AndroidHealthData,
   PlatformSpecificData 
-} from './HealthServices.types';
+} from './types';
+
+// Import workout-specific types and interfaces
+import type {
+  WorkoutHealthService,
+  WorkoutQueryParams,
+  WorkoutQueryResult,
+  WorkoutMetricQueryParams,
+  CompositeWorkoutQueryResult,
+  WorkoutStatsResult
+} from './workout/queries';
+import type {
+  WorkoutSessionAdapter,
+  CompositeWorkoutAdapter,
+  AnyMetricRecordAdapter,
+  WorkoutMetricType,
+  WorkoutExerciseType
+} from './workout/types';
 
 // Helper function to convert Health Connect record to our unified format
 const convertRecord = (record: any, dataType: string): HealthDataAdapter => {
@@ -82,7 +99,7 @@ const getRecordUnit = (record: any, dataType: string): string => {
   }
 };
 
-export const useHealthService = (): HealthServiceHook => {
+export const useHealthService = (): WorkoutHealthService => {
   const [isAvailable, setIsAvailable] = useState(false);
   const [authStatus, setAuthStatus] = useState<AuthorizationRequestStatus>(
     AuthorizationRequestStatus.unknown
@@ -215,6 +232,103 @@ export const useHealthService = (): HealthServiceHook => {
     }
   };
 
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // WORKOUT-SPECIFIC METHODS (STUB IMPLEMENTATIONS FOR ANDROID)
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // Note: Android workout implementation would require more work with Health Connect
+  // For now, these are stub implementations that return empty results
+
+  const getWorkoutSessions = async (params: WorkoutQueryParams): Promise<WorkoutQueryResult> => {
+    console.warn('Android workout sessions not yet implemented');
+    return {
+      sessions: [],
+      metadata: {
+        queryTime: Date.now(),
+        platform: 'android',
+        dataTypes: ['workoutSession']
+      }
+    };
+  };
+
+  const getWorkoutSession = async (
+    workoutId: string, 
+    params?: Partial<WorkoutQueryParams>
+  ): Promise<WorkoutSessionAdapter | null> => {
+    console.warn('Android workout session not yet implemented');
+    return null;
+  };
+
+  const getWorkoutMetrics = async (
+    params: WorkoutMetricQueryParams
+  ): Promise<Record<WorkoutMetricType, AnyMetricRecordAdapter[]>> => {
+    console.warn('Android workout metrics not yet implemented');
+    return {} as Record<WorkoutMetricType, AnyMetricRecordAdapter[]>;
+  };
+
+  const getCompositeWorkouts = async (
+    params: WorkoutQueryParams
+  ): Promise<CompositeWorkoutQueryResult> => {
+    console.warn('Android composite workouts not yet implemented');
+    return {
+      workouts: [],
+      metadata: {
+        queryTime: Date.now(),
+        platform: 'android',
+        metricsIncluded: []
+      }
+    };
+  };
+
+  const getCompositeWorkout = async (
+    workoutId: string,
+    params?: Partial<WorkoutQueryParams>
+  ): Promise<CompositeWorkoutAdapter | null> => {
+    console.warn('Android composite workout not yet implemented');
+    return null;
+  };
+
+  const getWorkoutStats = async (
+    params: WorkoutQueryParams & { 
+      groupBy?: 'day' | 'week' | 'month' | 'year';
+      includeAvg?: boolean;
+      includeMax?: boolean;
+      includeTotal?: boolean;
+    }
+  ): Promise<WorkoutStatsResult> => {
+    console.warn('Android workout stats not yet implemented');
+    return {
+      period: {
+        startDate: params.startDate?.toISOString() || '',
+        endDate: params.endDate?.toISOString() || '',
+        groupBy: params.groupBy || 'day'
+      },
+      buckets: [],
+      totals: {
+        totalWorkouts: 0,
+        totalDuration: 0,
+        totalDistance: 0,
+        totalCalories: 0,
+        avgDuration: 0
+      },
+      byExerciseType: {} as Record<WorkoutExerciseType, any>
+    };
+  };
+
+  const getWorkoutSummariesByType = async (
+    params: WorkoutQueryParams
+  ): Promise<Record<WorkoutExerciseType, any>> => {
+    console.warn('Android workout summaries not yet implemented');
+    return {} as Record<WorkoutExerciseType, any>;
+  };
+
+  const getPlatformWorkoutData = async <T = any>(
+    workoutId: string,
+    params?: Record<string, any>
+  ): Promise<T | null> => {
+    console.warn('Android platform workout data not yet implemented');
+    return null;
+  };
+
   return {
     isAvailable,
     platform: 'android',
@@ -224,6 +338,16 @@ export const useHealthService = (): HealthServiceHook => {
     getHealthData,
     getBatchData,
     getPlatformHealthData,
+    
+    // Workout methods (stub implementations)
+    getWorkoutSessions,
+    getWorkoutSession,
+    getWorkoutMetrics,
+    getCompositeWorkouts,
+    getCompositeWorkout,
+    getWorkoutStats,
+    getWorkoutSummariesByType,
+    getPlatformWorkoutData,
   };
 };
 

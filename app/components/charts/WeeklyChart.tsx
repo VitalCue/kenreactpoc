@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Svg, { Line, Polyline, Circle, Text as SvgText, Rect } from 'react-native-svg';
 
-interface DataPoint {
+export interface DataPoint {
   day: string;
   value: number;
 }
 
-interface WeeklyChartProps {
+export interface WeeklyChartProps {
   data: DataPoint[];
   height?: number;
   colors?: string[];
