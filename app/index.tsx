@@ -92,7 +92,7 @@ export default function Index() {
 
     return (
       <View style={styles.dataContainer}>
-        <Text style={styles.sectionTitle}>Today's Health Data</Text>
+        <Text style={styles.sectionTitle}>Today&apos;s Health Data</Text>
         {Object.entries(healthData).map(([dataType, records]) => (
           <View key={dataType} style={styles.dataTypeContainer}>
             <Text style={styles.dataType}>{dataType.toUpperCase()}</Text>

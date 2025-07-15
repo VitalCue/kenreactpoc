@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import Svg, { Line, Polyline, Circle, Text as SvgText, Rect } from 'react-native-svg';
+import Svg, { Line, Circle, Text as SvgText, Rect } from 'react-native-svg';
 
 export interface DataPoint {
   day: string;

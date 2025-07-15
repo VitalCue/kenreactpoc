@@ -9,25 +9,35 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
-import { useHealthService, HealthServiceUtils } from './services/health';
+import { HealthServiceUtils } from './services/health';
+import { useHealthService } from './services/health/ios';
+import type { WorkoutHealthService } from './services/health/workout/queries';
 import { HealthRing, HealthMetricCard } from './components/health';
 import { WeeklyChart } from './components/charts';
 import { Ionicons } from '@expo/vector-icons';
+import { WorkoutQueries } from './services/health/workout/queries';
+import { WorkoutSessionAdapter } from './services/health/workout/types';
+import { WorkoutExerciseType } from './services/health/workout/constants';
+import { TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function HealthDashboard() {
-  const healthService = useHealthService();
+  const healthService = useHealthService() as WorkoutHealthService;
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [todayData, setTodayData] = useState<any>(null);
   const [weeklyData, setWeeklyData] = useState<any>(null);
+  const [recentWorkouts, setRecentWorkouts] = useState<WorkoutSessionAdapter[]>([]);
+  const router = useRouter();
 
   const loadHealthData = async () => {
     if (!healthService.isAvailable) return;
 
     try {
-      const [today, weekly] = await Promise.all([
+      const [today, weekly, workouts] = await Promise.all([
         HealthServiceUtils.getTodaysData(healthService),
         HealthServiceUtils.getWeeklyData(healthService),
+        healthService.getWorkoutSessions(WorkoutQueries.recent(5)),
       ]);
 
       const todayStats = {
@@ -45,6 +55,13 @@ export default function HealthDashboard() {
 
       setTodayData(todayStats);
       setWeeklyData(weeklyStats);
+      
+      // Debug: Log workout types (can be removed later)
+      console.log('Recent workouts found:', workouts.sessions?.length || 0);
+      workouts.sessions?.forEach((session, index) => {
+        console.log(`Workout ${index + 1} - Excerise Type: `, session.exerciseType);
+      });
+      setRecentWorkouts(workouts.sessions || []);
     } catch (error) {
       console.error('Failed to load health data:', error);
     } finally {
@@ -121,6 +138,151 @@ export default function HealthDashboard() {
       value: index <= today ? values[index] || 0 : 0,
     }));
   };
+  
+  const handleWorkoutPress = (workout: WorkoutSessionAdapter) => {
+    router.push({
+      pathname: '/workout-detail',
+      params: { workoutId: workout.uuid }
+    });
+  };
+  
+  const getWorkoutIcon = (type: WorkoutExerciseType): any => {
+    const iconMap: Record<WorkoutExerciseType, string> = {
+      [WorkoutExerciseType.RUNNING]: 'fitness',
+      [WorkoutExerciseType.CYCLING]: 'bicycle',
+      [WorkoutExerciseType.WALKING]: 'walk',
+      [WorkoutExerciseType.SWIMMING]: 'water',
+      [WorkoutExerciseType.STRENGTH_TRAINING]: 'barbell',
+      [WorkoutExerciseType.WEIGHTLIFTING]: 'barbell',
+      [WorkoutExerciseType.BODYWEIGHT]: 'body',
+      [WorkoutExerciseType.YOGA]: 'body',
+      [WorkoutExerciseType.PILATES]: 'body',
+      [WorkoutExerciseType.TENNIS]: 'tennis-ball',
+      [WorkoutExerciseType.BASKETBALL]: 'basketball',
+      [WorkoutExerciseType.FOOTBALL]: 'football',
+      [WorkoutExerciseType.SOCCER]: 'football',
+      [WorkoutExerciseType.BASEBALL]: 'baseball',
+      [WorkoutExerciseType.GOLF]: 'golf',
+      [WorkoutExerciseType.HIKING]: 'trail-sign',
+      [WorkoutExerciseType.DANCING]: 'musical-notes',
+      [WorkoutExerciseType.MARTIAL_ARTS]: 'hand-right',
+      [WorkoutExerciseType.BOXING]: 'hand-right',
+      [WorkoutExerciseType.CLIMBING]: 'trending-up',
+      [WorkoutExerciseType.ELLIPTICAL]: 'repeat',
+      [WorkoutExerciseType.ROWING]: 'boat',
+      [WorkoutExerciseType.STAIR_CLIMBING]: 'trending-up',
+      [WorkoutExerciseType.HIGH_INTENSITY_INTERVAL_TRAINING]: 'flash',
+      [WorkoutExerciseType.OTHER]: 'fitness',
+      [WorkoutExerciseType.UNKNOWN]: 'fitness',
+    };
+    return iconMap[type] || 'fitness';
+  };
+  
+  const getWorkoutColor = (type: WorkoutExerciseType): string => {
+    const colorMap: Record<WorkoutExerciseType, string> = {
+      [WorkoutExerciseType.RUNNING]: '#FF6B6B',
+      [WorkoutExerciseType.CYCLING]: '#4ECDC4',
+      [WorkoutExerciseType.WALKING]: '#95E1D3',
+      [WorkoutExerciseType.SWIMMING]: '#5DADE2',
+      [WorkoutExerciseType.STRENGTH_TRAINING]: '#F39C12',
+      [WorkoutExerciseType.WEIGHTLIFTING]: '#F39C12',
+      [WorkoutExerciseType.BODYWEIGHT]: '#F39C12',
+      [WorkoutExerciseType.YOGA]: '#BB8FCE',
+      [WorkoutExerciseType.PILATES]: '#BB8FCE',
+      [WorkoutExerciseType.TENNIS]: '#58D68D',
+      [WorkoutExerciseType.BASKETBALL]: '#F7DC6F',
+      [WorkoutExerciseType.FOOTBALL]: '#85C1E9',
+      [WorkoutExerciseType.SOCCER]: '#85C1E9',
+      [WorkoutExerciseType.BASEBALL]: '#F8C471',
+      [WorkoutExerciseType.GOLF]: '#A9DFBF',
+      [WorkoutExerciseType.HIKING]: '#52BE80',
+      [WorkoutExerciseType.DANCING]: '#EC7063',
+      [WorkoutExerciseType.MARTIAL_ARTS]: '#D2B4DE',
+      [WorkoutExerciseType.BOXING]: '#D2B4DE',
+      [WorkoutExerciseType.CLIMBING]: '#A3E4D7',
+      [WorkoutExerciseType.ELLIPTICAL]: '#85C1E2',
+      [WorkoutExerciseType.ROWING]: '#76D7C4',
+      [WorkoutExerciseType.STAIR_CLIMBING]: '#F8C471',
+      [WorkoutExerciseType.HIGH_INTENSITY_INTERVAL_TRAINING]: '#FF4757',
+      [WorkoutExerciseType.OTHER]: '#AAB7B8',
+      [WorkoutExerciseType.UNKNOWN]: '#AAB7B8',
+    };
+    return colorMap[type] || '#AAB7B8';
+  };
+  
+  const formatWorkoutType = (type: WorkoutExerciseType): string => {
+    return type.split('_').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+  };
+  
+  const formatWorkoutDate = (date: Date): string => {
+    const now = new Date();
+    const workoutDate = new Date(date);
+    const diffInHours = (now.getTime() - workoutDate.getTime()) / (1000 * 60 * 60);
+    
+    if (diffInHours < 1) {
+      return 'Just now';
+    } else if (diffInHours < 24) {
+      return `${Math.floor(diffInHours)} hours ago`;
+    } else if (diffInHours < 48) {
+      return 'Yesterday';
+    } else {
+      return workoutDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+  };
+  
+  const formatDuration = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else {
+      return `${minutes} min`;
+    }
+  };
+  
+  const formatDataSource = (dataOrigin: string): string => {
+    // Map common bundle IDs to friendly names
+    const sourceMap: Record<string, string> = {
+      'com.apple.health': 'Apple Health',
+      'com.apple.Health': 'Apple Health',
+      'com.strava.stravaride': 'Strava',
+      'com.strava': 'Strava',
+      'com.nike.nikeplus-gps': 'Nike Run Club',
+      'com.runtastic.Runtastic': 'Adidas Running',
+      'com.myfitnesspal.mfp': 'MyFitnessPal',
+      'com.apple.Fitness': 'Apple Fitness+',
+      'com.peloton.Peloton': 'Peloton',
+      'com.underarmour.mapmyfitness': 'MapMyFitness',
+      'com.garmin.ConnectMobile': 'Garmin Connect',
+      'com.fitbit.FitbitMobile': 'Fitbit',
+      'com.whoop.Whoop': 'WHOOP',
+      'com.polar.polarflow': 'Polar Flow'
+    };
+    
+    // Check for exact match first
+    if (sourceMap[dataOrigin]) {
+      return sourceMap[dataOrigin];
+    }
+    
+    // Check for partial matches (for cases like com.strava.stravaride)
+    for (const [key, value] of Object.entries(sourceMap)) {
+      if (dataOrigin.includes(key.split('.')[1])) { // Check the main company name
+        return value;
+      }
+    }
+    
+    // Extract app name from bundle ID as fallback
+    const parts = dataOrigin.split('.');
+    if (parts.length >= 2) {
+      const appName = parts[parts.length - 1];
+      return appName.charAt(0).toUpperCase() + appName.slice(1);
+    }
+    
+    return 'Unknown';
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -162,7 +324,7 @@ export default function HealthDashboard() {
           />
         </View>
 
-        <Text style={styles.sectionTitle}>Today's Activity</Text>
+        <Text style={styles.sectionTitle}>Today&apos;s Activity</Text>
         
         <View style={styles.metricsGrid}>
           <HealthMetricCard
@@ -219,6 +381,57 @@ export default function HealthDashboard() {
             </View>
           </View>
         </View>
+        
+        <Text style={styles.sectionTitle}>Recent Workouts</Text>
+        
+        {recentWorkouts.length > 0 ? (
+          <View style={styles.workoutsContainer}>
+            {recentWorkouts.map((workout) => (
+              <TouchableOpacity
+                key={workout.uuid}
+                style={styles.workoutCard}
+                onPress={() => handleWorkoutPress(workout)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.workoutHeader}>
+                  <View style={[styles.workoutIconContainer, { backgroundColor: getWorkoutColor(workout.exerciseType) + '20' }]}>
+                    <Ionicons name={getWorkoutIcon(workout.exerciseType)} size={24} color={getWorkoutColor(workout.exerciseType)} />
+                  </View>
+                  <View style={styles.workoutInfo}>
+                    <Text style={styles.workoutType}>{formatWorkoutType(workout.exerciseType)}</Text>
+                    <Text style={styles.workoutDate}>{formatWorkoutDate(new Date(workout.startDate))}</Text>
+                    <Text style={styles.workoutSource}>{formatDataSource(workout.dataOrigin)}</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color="#999" />
+                </View>
+                <View style={styles.workoutStats}>
+                  <View style={styles.workoutStat}>
+                    <Text style={styles.workoutStatValue}>{formatDuration(workout.duration)}</Text>
+                    <Text style={styles.workoutStatLabel}>Duration</Text>
+                  </View>
+                  {workout.totalDistance && (
+                    <View style={styles.workoutStat}>
+                      <Text style={styles.workoutStatValue}>{(workout.totalDistance / 1000).toFixed(2)} km</Text>
+                      <Text style={styles.workoutStatLabel}>Distance</Text>
+                    </View>
+                  )}
+                  {workout.totalActiveCalories && (
+                    <View style={styles.workoutStat}>
+                      <Text style={styles.workoutStatValue}>{Math.round(workout.totalActiveCalories)}</Text>
+                      <Text style={styles.workoutStatLabel}>Calories</Text>
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        ) : (
+          <View style={styles.emptyWorkouts}>
+            <Ionicons name="bicycle" size={48} color="#DDD" />
+            <Text style={styles.emptyWorkoutsText}>No recent workouts</Text>
+            <Text style={styles.emptyWorkoutsSubtext}>Start a workout to see it here</Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -339,5 +552,88 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
+  },
+  workoutsContainer: {
+    paddingHorizontal: 24,
+    marginBottom: 32,
+  },
+  workoutCard: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  workoutHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  workoutIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  workoutInfo: {
+    flex: 1,
+  },
+  workoutType: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1a1a1a',
+    marginBottom: 2,
+  },
+  workoutDate: {
+    fontSize: 14,
+    color: '#666',
+  },
+  workoutSource: {
+    fontSize: 12,
+    color: '#999',
+    fontStyle: 'italic',
+    marginTop: 2,
+  },
+  workoutStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  workoutStat: {
+    alignItems: 'center',
+  },
+  workoutStatValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1a1a1a',
+    marginBottom: 2,
+  },
+  workoutStatLabel: {
+    fontSize: 12,
+    color: '#999',
+  },
+  emptyWorkouts: {
+    alignItems: 'center',
+    paddingVertical: 48,
+    paddingHorizontal: 24,
+  },
+  emptyWorkoutsText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#666',
+    marginTop: 16,
+    marginBottom: 4,
+  },
+  emptyWorkoutsSubtext: {
+    fontSize: 14,
+    color: '#999',
   },
 });

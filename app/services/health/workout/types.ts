@@ -1,7 +1,6 @@
 import type { AnyMap } from 'react-native-nitro-modules';
 import type { 
   HealthDataAdapter, 
-  PlatformSpecificData, 
   IOSDevice, 
   IOSSourceRevision, 
   AndroidDataCollector 

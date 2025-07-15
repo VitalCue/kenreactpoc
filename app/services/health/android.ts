@@ -7,9 +7,8 @@ import {
   getSdkStatus,
   SdkAvailabilityStatus,
 } from 'react-native-health-connect';
-import type { ReadRecordsOptions, RecordType } from 'react-native-health-connect';
+import type { ReadRecordsOptions } from 'react-native-health-connect';
 import { 
-  HealthServiceHook, 
   HealthDataAdapter, 
   QueryParams, 
   AuthorizationRequestStatus,

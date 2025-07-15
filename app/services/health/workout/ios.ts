@@ -119,27 +119,32 @@ export interface RawActivitySummary {
  * HealthKit HKWorkoutActivityType mapping to unified types
  */
 export const HEALTHKIT_ACTIVITY_TYPE_MAP: Record<number, WorkoutExerciseType> = {
-  1: WorkoutExerciseType.RUNNING,
-  2: WorkoutExerciseType.WALKING,
-  3: WorkoutExerciseType.CYCLING,
-  4: WorkoutExerciseType.SWIMMING,
-  5: WorkoutExerciseType.TENNIS,
+  1: WorkoutExerciseType.FOOTBALL,        // American Football
+  5: WorkoutExerciseType.BASEBALL,
   6: WorkoutExerciseType.BASKETBALL,
-  7: WorkoutExerciseType.FOOTBALL,
-  8: WorkoutExerciseType.SOCCER,
-  9: WorkoutExerciseType.BASEBALL,
-  10: WorkoutExerciseType.HIKING,
-  11: WorkoutExerciseType.STRENGTH_TRAINING,
-  12: WorkoutExerciseType.YOGA,
-  13: WorkoutExerciseType.DANCING,
-  14: WorkoutExerciseType.ROWING,
-  15: WorkoutExerciseType.ELLIPTICAL,
-  16: WorkoutExerciseType.STAIR_CLIMBING,
-  17: WorkoutExerciseType.GOLF,
-  18: WorkoutExerciseType.PILATES,
-  19: WorkoutExerciseType.MARTIAL_ARTS,
-  20: WorkoutExerciseType.BOXING,
-  21: WorkoutExerciseType.CLIMBING,
+  8: WorkoutExerciseType.BOXING,
+  9: WorkoutExerciseType.CLIMBING,
+  11: WorkoutExerciseType.OTHER,          // Cross-Training
+  13: WorkoutExerciseType.CYCLING,
+  14: WorkoutExerciseType.DANCING,
+  15: WorkoutExerciseType.DANCING,        // Dance-Inspired Training
+  16: WorkoutExerciseType.ELLIPTICAL,
+  20: WorkoutExerciseType.STRENGTH_TRAINING,  // Functional Strength Training
+  21: WorkoutExerciseType.GOLF,
+  24: WorkoutExerciseType.HIKING,
+  28: WorkoutExerciseType.MARTIAL_ARTS,
+  29: WorkoutExerciseType.OTHER,          // Mind & Body
+  35: WorkoutExerciseType.ROWING,
+  37: WorkoutExerciseType.RUNNING,
+  41: WorkoutExerciseType.SOCCER,
+  44: WorkoutExerciseType.STAIR_CLIMBING,
+  46: WorkoutExerciseType.SWIMMING,
+  48: WorkoutExerciseType.TENNIS,
+  50: WorkoutExerciseType.STRENGTH_TRAINING,  // Traditional Strength Training
+  52: WorkoutExerciseType.WALKING,
+  57: WorkoutExerciseType.YOGA,
+  
+  66: WorkoutExerciseType.PILATES,
   3000: WorkoutExerciseType.OTHER
 };
 
@@ -534,9 +539,9 @@ export function filterMetricsByWorkoutTime(
  */
 export function getDistanceQuantityTypeForActivity(activityType: number): string {
   switch (activityType) {
-    case 3: // Cycling
+    case 13: // Cycling
       return HEALTHKIT_QUANTITY_TYPES.DISTANCE_CYCLING;
-    case 4: // Swimming
+    case 46: // Swimming
       return HEALTHKIT_QUANTITY_TYPES.DISTANCE_SWIMMING;
     default:
       return HEALTHKIT_QUANTITY_TYPES.DISTANCE_WALKING_RUNNING;

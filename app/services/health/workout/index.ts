@@ -2,163 +2,55 @@
 // WORKOUT HEALTH SERVICES - INDEX
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// ── Core Types ──────────────────────────────────────────────────────────────────
-export type {
-  // Unified workout interfaces
-  WorkoutSessionAdapter,
-  WorkoutSegmentAdapter,
-  WorkoutLapAdapter,
-  WorkoutEventAdapter,
-  WorkoutRouteAdapter,
-  WorkoutLocationAdapter,
-  
-  // Metric interfaces
-  MetricRecordAdapter,
-  HeartRateRecordAdapter,
-  DistanceRecordAdapter,
-  ActiveCaloriesRecordAdapter,
-  SpeedRecordAdapter,
-  StepCountRecordAdapter,
-  PowerRecordAdapter,
-  CadenceRecordAdapter,
-  
-  // Composite & aggregated data
-  CompositeWorkoutAdapter,
-  HeartRateZone,
-  
-  // Platform-specific extensions
-  WorkoutPlatformData,
-  IOSWorkoutData,
-  IOSWorkoutEvent,
-  AndroidWorkoutData,
-  AndroidWorkoutSegment,
-  AndroidExerciseRoute,
-  AndroidLocationData,
-  
-  // Type unions
-  AnyWorkoutAdapter,
-  AnyMetricRecordAdapter
-} from './types';
+// ── Core Types & Constants ─────────────────────────────────────────────────────
+export * from './constants';
 
-// ── Enums ───────────────────────────────────────────────────────────────────────
-export {
-  WorkoutExerciseType,
-  WorkoutEventType
-} from './types';
+// ── Platform Adapters ──────────────────────────────────────────────────────────
+export * from './adapters';
 
-export type {
-  WorkoutMetricType
-} from './types';
+// ── Query System ───────────────────────────────────────────────────────────────
+export * from './queries';
 
-// ── Type Guards ─────────────────────────────────────────────────────────────────
-export {
-  isWorkoutSession,
-  isMetricRecord,
-  isHeartRateRecord,
-  isDistanceRecord,
-  isIOSWorkoutData,
-  isAndroidWorkoutData
-} from './types';
-
-// ── Android/Health Connect Adapters ────────────────────────────────────────────
-export type {
-  RawExerciseSessionRecord,
-  RawExerciseSegment,
-  RawExerciseLap,
-  RawExerciseRoute,
-  RawHealthConnectMetric
-} from './android';
-
-export {
-  HEALTH_CONNECT_EXERCISE_TYPE_MAP,
-  adaptHealthConnectWorkoutSession,
-  adaptHealthConnectMetric,
-  buildCompositeWorkoutFromHealthConnect,
-  mapHealthConnectDataType,
-  validateHealthConnectWorkout,
-  filterMetricsByWorkoutTime as filterMetricsByWorkoutTimeAndroid
-} from './android';
-
-// ── iOS/HealthKit Adapters ─────────────────────────────────────────────────────
-export type {
-  RawWorkout,
-  RawWorkoutEvent,
-  RawRoute,
-  RawLocation,
-  RawQuantitySample,
-  RawActivitySummary
-} from './ios';
-
-export {
-  HEALTHKIT_ACTIVITY_TYPE_MAP,
-  HEALTHKIT_EVENT_TYPE_MAP,
-  HEALTHKIT_QUANTITY_TYPES,
-  adaptHealthKitWorkout,
-  adaptHealthKitQuantitySample,
-  buildCompositeWorkoutFromHealthKit,
-  validateHealthKitWorkout,
-  filterMetricsByWorkoutTime as filterMetricsByWorkoutTimeIOS,
-  getDistanceQuantityTypeForActivity
-} from './ios';
-
-// ── Query Interfaces ────────────────────────────────────────────────────────────
-export type {
-  WorkoutQueryParams,
-  WorkoutMetricQueryParams,
-  WorkoutQueryResult,
-  CompositeWorkoutQueryResult,
-  WorkoutHealthService,
-  WorkoutStatsResult,
-  WorkoutStatsBucket,
-  WorkoutTypeSummary
-} from './queries';
-
-export {
-  WorkoutQueryBuilder,
-  WorkoutQueries,
-  createWorkoutQuery
-} from './queries';
+// ── Utilities ──────────────────────────────────────────────────────────────────
+// export * from './utils'; // Commented to avoid conflicts
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// CONVENIENCE RE-EXPORTS
+// CONVENIENCE HELPERS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// Re-export commonly used types from base health services
-export type {
-  HealthDataAdapter,
-  QueryParams,
-  FilterForSamples,
-  HealthServiceHook,
-  IOSDevice,
-  IOSSourceRevision,
-  AndroidDataCollector
-} from '../types';
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// UTILITY FUNCTIONS
-// ═══════════════════════════════════════════════════════════════════════════════
-
-// Import types needed for utility functions
+import { WorkoutExerciseType } from './constants';
 import type { MetricRecordAdapter } from './types';
-import { WorkoutExerciseType } from './types';
 
 /**
  * Platform-agnostic workout adapter selector
  */
 export function createWorkoutAdapter(platform: 'ios' | 'android') {
   if (platform === 'ios') {
+    const { 
+      adaptHealthKitWorkout, 
+      adaptHealthKitQuantitySample, 
+      buildCompositeWorkoutFromHealthKit,
+      validateHealthKitWorkout 
+    } = require('./adapters/ios');
+    
     return {
-      adaptWorkoutSession: require('./ios').adaptHealthKitWorkout,
-      adaptMetric: require('./ios').adaptHealthKitQuantitySample,
-      buildComposite: require('./ios').buildCompositeWorkoutFromHealthKit,
-      validate: require('./ios').validateHealthKitWorkout
+      adaptWorkoutSession: adaptHealthKitWorkout,
+      adaptMetric: adaptHealthKitQuantitySample,
+      buildComposite: buildCompositeWorkoutFromHealthKit,
+      validate: validateHealthKitWorkout
     };
   } else {
+    const { 
+      adaptHealthConnectWorkout, 
+      adaptHealthConnectMetric,
+      validateHealthConnectWorkout 
+    } = require('./adapters/android');
+    
     return {
-      adaptWorkoutSession: require('./android').adaptHealthConnectWorkoutSession,
-      adaptMetric: require('./android').adaptHealthConnectMetric,
-      buildComposite: require('./android').buildCompositeWorkoutFromHealthConnect,
-      validate: require('./android').validateHealthConnectWorkout
+      adaptWorkoutSession: adaptHealthConnectWorkout,
+      adaptMetric: adaptHealthConnectMetric,
+      buildComposite: undefined, // Android composite builder not implemented yet
+      validate: validateHealthConnectWorkout
     };
   }
 }
@@ -168,9 +60,11 @@ export function createWorkoutAdapter(platform: 'ios' | 'android') {
  */
 export function getExerciseTypeMap(platform: 'ios' | 'android') {
   if (platform === 'ios') {
-    return require('./ios').HEALTHKIT_ACTIVITY_TYPE_MAP;
+    const { HEALTHKIT_ACTIVITY_TYPE_MAP } = require('./adapters/ios');
+    return HEALTHKIT_ACTIVITY_TYPE_MAP;
   } else {
-    return require('./android').HEALTH_CONNECT_EXERCISE_TYPE_MAP;
+    const { HEALTH_CONNECT_EXERCISE_TYPE_MAP } = require('./adapters/android');
+    return HEALTH_CONNECT_EXERCISE_TYPE_MAP;
   }
 }
 
@@ -181,17 +75,15 @@ export function filterMetricsByWorkoutTime(
   metrics: MetricRecordAdapter[],
   workoutStart: string,
   workoutEnd: string,
-  platform: 'ios' | 'android'
+  platform?: 'ios' | 'android'
 ): MetricRecordAdapter[] {
-  if (platform === 'ios') {
-    return require('./ios').filterMetricsByWorkoutTime(metrics, workoutStart, workoutEnd);
-  } else {
-    return require('./android').filterMetricsByWorkoutTime(metrics, workoutStart, workoutEnd);
-  }
+  // Use the iOS implementation as it's more comprehensive
+  const { filterMetricsByWorkoutTime: iosFilter } = require('./adapters/ios');
+  return iosFilter(metrics, workoutStart, workoutEnd);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// CONSTANTS
+// EXERCISE TYPE COLLECTIONS
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
@@ -224,7 +116,8 @@ export const CARDIO_EXERCISE_TYPES = [
   WorkoutExerciseType.CYCLING,
   WorkoutExerciseType.SWIMMING,
   WorkoutExerciseType.ROWING,
-  WorkoutExerciseType.ELLIPTICAL
+  WorkoutExerciseType.ELLIPTICAL,
+  WorkoutExerciseType.STAIR_CLIMBING
 ] as const;
 
 /**
@@ -233,5 +126,19 @@ export const CARDIO_EXERCISE_TYPES = [
 export const STRENGTH_EXERCISE_TYPES = [
   WorkoutExerciseType.STRENGTH_TRAINING,
   WorkoutExerciseType.WEIGHTLIFTING,
-  WorkoutExerciseType.BODYWEIGHT
+  WorkoutExerciseType.BODYWEIGHT,
+  WorkoutExerciseType.YOGA,
+  WorkoutExerciseType.PILATES
+] as const;
+
+/**
+ * Sport exercise types
+ */
+export const SPORT_EXERCISE_TYPES = [
+  WorkoutExerciseType.TENNIS,
+  WorkoutExerciseType.BASKETBALL,
+  WorkoutExerciseType.FOOTBALL,
+  WorkoutExerciseType.SOCCER,
+  WorkoutExerciseType.BASEBALL,
+  WorkoutExerciseType.GOLF
 ] as const;

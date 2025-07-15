@@ -8,11 +8,9 @@ import {
 import type { 
   QuantitySample as HKQuantitySample, 
   QueryOptionsWithSortOrderAndUnit,
-  WorkoutSample,
   WorkoutQueryOptions
 } from '@kingstinct/react-native-healthkit';
 import { 
-  HealthServiceHook, 
   HealthDataAdapter, 
   QueryParams, 
   AuthorizationRequestStatus,

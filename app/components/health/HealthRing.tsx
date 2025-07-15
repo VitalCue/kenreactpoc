@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
-import Svg, { Circle, Path, Defs, LinearGradient, Stop } from 'react-native-svg';
+import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import Animated, { 
   useAnimatedProps, 
   useSharedValue, 
   withTiming,
-  interpolate,
   Easing
 } from 'react-native-reanimated';
 

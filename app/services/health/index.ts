@@ -2,35 +2,71 @@
 // HEALTH SERVICES - INDEX
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// ── Core Health Service ────────────────────────────────────────────────────────
-export { 
-  useHealthService, 
-  getPlatformHealthService,
-  useIOSHealthService,
-  useAndroidHealthService 
-} from './service';
+// ── Core Health System ─────────────────────────────────────────────────────────
+export * from './core';
+export * from './service';
+
+// Platform-specific exports commented out to avoid duplicates
+// export * from './platforms';
+
+// ── Query System ───────────────────────────────────────────────────────────────
+export * from './queries';
 
 // ── Utilities ──────────────────────────────────────────────────────────────────
 export * from './utils';
 
-// ── Types ──────────────────────────────────────────────────────────────────────
-export type {
-  HealthDataAdapter,
+// Workout module exports commented out to avoid duplicates
+// export * from './workout';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CONVENIENCE EXPORTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// Main service hook
+export { useHealthService } from './service';
+
+// Platform-specific services
+export { 
+  useIOSHealthService, 
+  useAndroidHealthService,
+  getPlatformHealthService 
+} from './service';
+
+// Essential utilities
+export { 
+  HealthDataFetchers, 
+  HealthDataAggregators, 
+  getHealthSummary 
+} from './utils/aggregation';
+export { HealthDataFormatters } from './utils/formatters';
+export { HealthDataValidators } from './utils/validators';
+
+// Query builders
+export { 
+  Filters, 
+  HealthQueries, 
+  createHealthQuery,
+  HealthQueryBuilder 
+} from './queries';
+
+// Core types
+export type { 
+  HealthDataAdapter, 
+  HealthServiceHook, 
+  QueryParams,
+  AuthorizationRequestStatus,
+  AuthorizationStatus,
   PlatformSpecificData,
   IOSHealthData,
   AndroidHealthData,
   IOSDevice,
   IOSSourceRevision,
-  AndroidDataCollector,
-  QueryParams,
-  FilterForSamples,
-  HealthServiceHook,
-  AuthorizationRequestStatus,
-  AuthorizationStatus
-} from './types';
+  AndroidDataCollector
+} from './core/types';
 
-// ── Query Builders ─────────────────────────────────────────────────────────────
-export { Filters } from './types';
-
-// ── Workout Services ───────────────────────────────────────────────────────────
-export * from './workout';
+// Health data constants
+export { 
+  HEALTH_DATA_TYPES, 
+  HEALTH_UNITS, 
+  DEFAULT_PAGE_SIZES 
+} from './core/constants';

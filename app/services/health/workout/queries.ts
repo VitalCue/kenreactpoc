@@ -426,12 +426,14 @@ export class WorkoutQueryBuilder {
  */
 export const WorkoutQueries = {
   /**
-   * Get recent workouts (last 7 days)
+   * Get recent workouts (last 30 days)
    */
   recent: (limit: number = 20): WorkoutQueryParams => {
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 7);
+
+    //Get the most recent 6 months
+    startDate.setDate(startDate.getDate() - 182 );
     
     return {
       startDate,
