@@ -15,10 +15,9 @@ import type {
 import { AuthorizationRequestStatus } from '../../core/types';
 import { 
   convertRecord, 
-  mapToHealthConnectRecordType, 
-  mapToHealthConnectPermission 
+  mapToHealthConnectRecordType
 } from './mappers';
-import { HEALTH_CONNECT_BASIC_PERMISSIONS } from './types';
+
 
 export const useHealthService = (): HealthServiceHook => {
   const [isAvailable, setIsAvailable] = useState(false);
@@ -48,11 +47,48 @@ export const useHealthService = (): HealthServiceHook => {
       }
 
       // Use provided data types or default permissions
-      const permissions = dataTypes 
-        ? dataTypes.map(mapToHealthConnectPermission)
-        : [...HEALTH_CONNECT_BASIC_PERMISSIONS];
+      const defaultPermissions = [
+        // Basic health data
+        { accessType: 'read' as const, recordType: 'Steps' as const },
+        { accessType: 'read' as const, recordType: 'Distance' as const },
+        { accessType: 'read' as const, recordType: 'TotalCaloriesBurned' as const },
+        { accessType: 'read' as const, recordType: 'ActiveCaloriesBurned' as const },
+        { accessType: 'read' as const, recordType: 'HeartRate' as const },
         
+        // Speed data (for walkingSpeed/runningSpeed)
+        { accessType: 'read' as const, recordType: 'Speed' as const },
+        
+        // Exercise data
+        { accessType: 'read' as const, recordType: 'ExerciseSession' as const },
+        
+        // Advanced metrics
+        { accessType: 'read' as const, recordType: 'Power' as const },
+      ];
+      
+      const permissions = dataTypes 
+        ? dataTypes.map(dataType => {
+            // Simple mapping for now
+            const mapping: Record<string, any> = {
+              'steps': { accessType: 'read' as const, recordType: 'Steps' as const },
+              'stepCount': { accessType: 'read' as const, recordType: 'Steps' as const },
+              'distance': { accessType: 'read' as const, recordType: 'Distance' as const },
+              'calories': { accessType: 'read' as const, recordType: 'ActiveCaloriesBurned' as const },
+              'activeCalories': { accessType: 'read' as const, recordType: 'ActiveCaloriesBurned' as const },
+              'heartRate': { accessType: 'read' as const, recordType: 'HeartRate' as const },
+              'speed': { accessType: 'read' as const, recordType: 'Speed' as const },
+              'walkingSpeed': { accessType: 'read' as const, recordType: 'Speed' as const },
+              'runningSpeed': { accessType: 'read' as const, recordType: 'Speed' as const },
+              'exerciseSession': { accessType: 'read' as const, recordType: 'ExerciseSession' as const },
+              'workoutSession': { accessType: 'read' as const, recordType: 'ExerciseSession' as const },
+              'power': { accessType: 'read' as const, recordType: 'Power' as const },
+            };
+            return mapping[dataType] || { accessType: 'read' as const, recordType: 'Steps' as const };
+          })
+        : defaultPermissions;
+        
+      console.log('Requesting permissions:', permissions);
       const result = await requestPermission(permissions);
+      console.log('Permission result:', result);
       const status = result ? AuthorizationRequestStatus.unnecessary : AuthorizationRequestStatus.shouldRequest;
       setAuthStatus(status);
       return status;
@@ -72,12 +108,17 @@ export const useHealthService = (): HealthServiceHook => {
       }
 
       const recordType = mapToHealthConnectRecordType(dataType);
+      console.log(`Querying ${dataType} -> ${recordType} from ${params.startDate} to ${params.endDate}`);
       
-      const timeRangeFilter = (params.startDate && params.endDate) ? {
+      if (!params.startDate || !params.endDate) {
+        throw new Error('startDate and endDate are required for Android Health Connect');
+      }
+
+      const timeRangeFilter = {
         operator: 'between' as const,
         startTime: params.startDate.toISOString(),
         endTime: params.endDate.toISOString(),
-      } : undefined;
+      };
       
       const options: ReadRecordsOptions = {
         timeRangeFilter,
@@ -86,8 +127,18 @@ export const useHealthService = (): HealthServiceHook => {
         pageToken: params.android?.pageToken,
       };
 
-      const records = await readRecords(recordType as any, options);
-      return (records as any).map((record: any) => convertRecord(record, dataType));
+      const result = await readRecords(recordType as any, options);
+      console.log('Raw Health Connect result:', result);
+      
+      // Handle different possible response structures
+      const records = result?.records || result || [];
+      
+      if (!Array.isArray(records)) {
+        console.warn('Expected array of records, got:', typeof records, records);
+        return [];
+      }
+      
+      return records.map((record: any) => convertRecord(record, dataType));
     } catch (error) {
       console.error('Error fetching health data:', error);
       return [];
@@ -127,11 +178,15 @@ export const useHealthService = (): HealthServiceHook => {
 
       const recordType = mapToHealthConnectRecordType(dataType);
       
-      const timeRangeFilter = (params.startDate && params.endDate) ? {
+      if (!params.startDate || !params.endDate) {
+        throw new Error('startDate and endDate are required for Android Health Connect');
+      }
+
+      const timeRangeFilter = {
         operator: 'between' as const,
         startTime: params.startDate.toISOString(),
         endTime: params.endDate.toISOString(),
-      } : undefined;
+      };
       
       const options: ReadRecordsOptions = {
         timeRangeFilter,
@@ -140,13 +195,23 @@ export const useHealthService = (): HealthServiceHook => {
         pageToken: params.android?.pageToken,
       };
 
-      const records = await readRecords(recordType as any, options);
-      return (records as any) as T[];
+      const result = await readRecords(recordType as any, options);
+      
+      // Handle different possible response structures
+      const records = result?.records || result || [];
+      
+      if (!Array.isArray(records)) {
+        console.warn('Expected array of records, got:', typeof records, records);
+        return [];
+      }
+
+      return records as T[];
     } catch (error) {
       console.error('Error fetching platform health data:', error);
       return [];
     }
   };
+
 
   return {
     isAvailable,
@@ -156,6 +221,6 @@ export const useHealthService = (): HealthServiceHook => {
     AuthorizationRequestStatus,
     getHealthData,
     getBatchData,
-    getPlatformHealthData
+    getPlatformHealthData,
   };
 };

@@ -34,7 +34,7 @@ export const HealthDataFetchers = {
     const params = {
       startDate: startOfWeek,
       endDate: endOfWeek,
-      pageSize: 10000,
+      pageSize: 5000,
     };
 
     const defaultTypes = ['steps', 'distance', 'calories', 'walkingSpeed', 'runningSpeed'];
@@ -53,7 +53,7 @@ export const HealthDataFetchers = {
     const params = {
       startDate: startOfMonth,
       endDate: endOfMonth,
-      pageSize: 50000,
+      pageSize: 5000,
     };
 
     const defaultTypes = ['steps', 'distance', 'calories', 'heartRate'];

@@ -10,7 +10,8 @@ import {
   Platform,
 } from 'react-native';
 import { HealthServiceUtils } from './services/health';
-import { useHealthService } from './services/health/ios';
+import { useHealthService as useIOSHealthService } from './services/health/ios';
+import { useHealthService as useAndroidHealthService } from './services/health/android';
 import type { WorkoutHealthService } from './services/health/workout/queries';
 import { HealthRing, HealthMetricCard } from './components/health';
 import { WeeklyChart } from './components/charts';
@@ -22,7 +23,11 @@ import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function HealthDashboard() {
-  const healthService = useHealthService() as WorkoutHealthService;
+  // Use the appropriate health service based on platform
+  const iosHealthService = useIOSHealthService();
+  const androidHealthService = useAndroidHealthService();
+  
+  const healthService = (Platform.OS === 'ios' ? iosHealthService : androidHealthService) as WorkoutHealthService;
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [todayData, setTodayData] = useState<any>(null);
@@ -57,9 +62,13 @@ export default function HealthDashboard() {
       setWeeklyData(weeklyStats);
       
       // Debug: Log workout types (can be removed later)
+      // Debug: Log data for both platforms
+      console.log(`Platform: ${Platform.OS}`);
+      console.log('Today\'s data:', todayStats);
+      console.log('Weekly data:', weeklyStats);
       console.log('Recent workouts found:', workouts.sessions?.length || 0);
       workouts.sessions?.forEach((session, index) => {
-        console.log(`Workout ${index + 1} - Excerise Type: `, session.exerciseType);
+        console.log(`Workout ${index + 1} - Exercise Type: ${session.exerciseType}, Source: ${session.dataOrigin}`);
       });
       setRecentWorkouts(workouts.sessions || []);
     } catch (error) {
@@ -244,22 +253,36 @@ export default function HealthDashboard() {
   };
   
   const formatDataSource = (dataOrigin: string): string => {
-    // Map common bundle IDs to friendly names
+    // Map common bundle IDs and package names to friendly names
     const sourceMap: Record<string, string> = {
+      // iOS bundle IDs
       'com.apple.health': 'Apple Health',
       'com.apple.Health': 'Apple Health',
+      'com.apple.Fitness': 'Apple Fitness+',
       'com.strava.stravaride': 'Strava',
       'com.strava': 'Strava',
       'com.nike.nikeplus-gps': 'Nike Run Club',
       'com.runtastic.Runtastic': 'Adidas Running',
       'com.myfitnesspal.mfp': 'MyFitnessPal',
-      'com.apple.Fitness': 'Apple Fitness+',
       'com.peloton.Peloton': 'Peloton',
       'com.underarmour.mapmyfitness': 'MapMyFitness',
       'com.garmin.ConnectMobile': 'Garmin Connect',
       'com.fitbit.FitbitMobile': 'Fitbit',
       'com.whoop.Whoop': 'WHOOP',
-      'com.polar.polarflow': 'Polar Flow'
+      'com.polar.polarflow': 'Polar Flow',
+      // Android package names
+      'com.google.android.apps.fitness': 'Google Fit',
+      'com.samsung.shealth': 'Samsung Health',
+      'com.samsung.android.app.health': 'Samsung Health',
+      'com.huawei.health': 'Huawei Health',
+      'com.xiaomi.hm.health': 'Mi Fitness',
+      'com.strava.android': 'Strava',
+      'com.nike.plusone': 'Nike Run Club',
+      'com.runtastic.android': 'Adidas Running',
+      'com.myfitnesspal.android': 'MyFitnessPal',
+      'com.garmin.android.apps.connectmobile': 'Garmin Connect',
+      'com.fitbit.FitbitMobile.android': 'Fitbit',
+      'com.whoop.android': 'WHOOP'
     };
     
     // Check for exact match first

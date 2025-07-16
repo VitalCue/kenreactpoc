@@ -3,30 +3,33 @@
  */
 export const HEALTH_CONNECT_DATA_TYPES = {
   // Vital signs
-  HEART_RATE: 'HeartRateRecord',
-  BLOOD_PRESSURE: 'BloodPressureRecord',
-  RESPIRATORY_RATE: 'RespiratoryRateRecord',
-  BODY_TEMPERATURE: 'BodyTemperatureRecord',
-  OXYGEN_SATURATION: 'OxygenSaturationRecord',
+  HEART_RATE: 'HeartRate',
+  BLOOD_PRESSURE: 'BloodPressure',
+  RESPIRATORY_RATE: 'RespiratoryRate',
+  BODY_TEMPERATURE: 'BodyTemperature',
+  OXYGEN_SATURATION: 'OxygenSaturation',
   
   // Body measurements
-  WEIGHT: 'WeightRecord',
-  HEIGHT: 'HeightRecord',
-  BMI: 'BodyMassIndexRecord', // May not be available
-  BODY_FAT: 'BodyFatRecord',
+  WEIGHT: 'Weight',
+  HEIGHT: 'Height',
+  BMI: 'BodyMassIndex', // May not be available
+  BODY_FAT: 'BodyFat',
   
   // Activity
-  STEPS: 'StepsRecord',
-  DISTANCE: 'DistanceRecord',
-  ACTIVE_CALORIES: 'ActiveCaloriesBurnedRecord',
-  TOTAL_CALORIES: 'TotalCaloriesBurnedRecord',
+  STEPS: 'Steps',
+  DISTANCE: 'Distance',
+  ACTIVE_CALORIES: 'ActiveCaloriesBurned',
+  TOTAL_CALORIES: 'TotalCaloriesBurned',
+  EXERCISE_SESSION: 'ExerciseSession',
+  SPEED: 'Speed',
+  POWER: 'Power',
   
   // Sleep
-  SLEEP_SESSION: 'SleepSessionRecord',
+  SLEEP_SESSION: 'SleepSession',
   
   // Nutrition
-  NUTRITION: 'NutritionRecord',
-  HYDRATION: 'HydrationRecord'
+  NUTRITION: 'Nutrition',
+  HYDRATION: 'Hydration'
 } as const;
 
 /**
@@ -34,29 +37,32 @@ export const HEALTH_CONNECT_DATA_TYPES = {
  */
 export const HEALTH_CONNECT_PERMISSIONS = {
   // Vital signs
-  HEART_RATE: { accessType: 'read', recordType: 'HeartRateRecord' },
-  BLOOD_PRESSURE: { accessType: 'read', recordType: 'BloodPressureRecord' },
-  RESPIRATORY_RATE: { accessType: 'read', recordType: 'RespiratoryRateRecord' },
-  BODY_TEMPERATURE: { accessType: 'read', recordType: 'BodyTemperatureRecord' },
-  OXYGEN_SATURATION: { accessType: 'read', recordType: 'OxygenSaturationRecord' },
+  HEART_RATE: { accessType: 'read' as const, recordType: 'HeartRate' as const },
+  BLOOD_PRESSURE: { accessType: 'read' as const, recordType: 'BloodPressure' as const },
+  RESPIRATORY_RATE: { accessType: 'read' as const, recordType: 'RespiratoryRate' as const },
+  BODY_TEMPERATURE: { accessType: 'read' as const, recordType: 'BodyTemperature' as const },
+  OXYGEN_SATURATION: { accessType: 'read' as const, recordType: 'OxygenSaturation' as const },
   
   // Body measurements
-  WEIGHT: { accessType: 'read', recordType: 'WeightRecord' },
-  HEIGHT: { accessType: 'read', recordType: 'HeightRecord' },
-  BODY_FAT: { accessType: 'read', recordType: 'BodyFatRecord' },
+  WEIGHT: { accessType: 'read' as const, recordType: 'Weight' as const },
+  HEIGHT: { accessType: 'read' as const, recordType: 'Height' as const },
+  BODY_FAT: { accessType: 'read' as const, recordType: 'BodyFat' as const },
   
   // Activity
-  STEPS: { accessType: 'read', recordType: 'StepsRecord' },
-  DISTANCE: { accessType: 'read', recordType: 'DistanceRecord' },
-  ACTIVE_CALORIES: { accessType: 'read', recordType: 'ActiveCaloriesBurnedRecord' },
-  TOTAL_CALORIES: { accessType: 'read', recordType: 'TotalCaloriesBurnedRecord' },
+  STEPS: { accessType: 'read' as const, recordType: 'Steps' as const },
+  DISTANCE: { accessType: 'read' as const, recordType: 'Distance' as const },
+  ACTIVE_CALORIES: { accessType: 'read' as const, recordType: 'ActiveCaloriesBurned' as const },
+  TOTAL_CALORIES: { accessType: 'read' as const, recordType: 'TotalCaloriesBurned' as const },
+  EXERCISE_SESSION: { accessType: 'read' as const, recordType: 'ExerciseSession' as const },
+  SPEED: { accessType: 'read' as const, recordType: 'Speed' as const },
+  POWER: { accessType: 'read' as const, recordType: 'Power' as const },
   
   // Sleep
-  SLEEP_SESSION: { accessType: 'read', recordType: 'SleepSessionRecord' },
+  SLEEP_SESSION: { accessType: 'read' as const, recordType: 'SleepSession' as const },
   
   // Nutrition
-  NUTRITION: { accessType: 'read', recordType: 'NutritionRecord' },
-  HYDRATION: { accessType: 'read', recordType: 'HydrationRecord' }
+  NUTRITION: { accessType: 'read' as const, recordType: 'Nutrition' as const },
+  HYDRATION: { accessType: 'read' as const, recordType: 'Hydration' as const }
 } as const;
 
 /**
@@ -70,5 +76,8 @@ export const HEALTH_CONNECT_BASIC_PERMISSIONS = [
   HEALTH_CONNECT_PERMISSIONS.STEPS,
   HEALTH_CONNECT_PERMISSIONS.DISTANCE,
   HEALTH_CONNECT_PERMISSIONS.ACTIVE_CALORIES,
-  HEALTH_CONNECT_PERMISSIONS.SLEEP_SESSION
+  HEALTH_CONNECT_PERMISSIONS.SLEEP_SESSION,
+  HEALTH_CONNECT_PERMISSIONS.EXERCISE_SESSION,
+  HEALTH_CONNECT_PERMISSIONS.SPEED,
+  HEALTH_CONNECT_PERMISSIONS.POWER
 ] as const;

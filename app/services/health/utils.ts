@@ -35,7 +35,7 @@ export const HealthServiceUtils = {
     const params = {
       startDate: startOfWeek,
       endDate: endOfWeek,
-      pageSize: 10000,
+      pageSize: 5000,
     };
 
     return await healthService.getBatchData(

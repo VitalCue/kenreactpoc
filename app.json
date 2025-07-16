@@ -24,12 +24,15 @@
         "android.permission.health.READ_HEART_RATE",
         "android.permission.health.READ_RESTING_HEART_RATE",
         "android.permission.health.READ_ACTIVE_CALORIES_BURNED",
+        "android.permission.health.READ_TOTAL_CALORIES_BURNED",
+        "android.permission.health.READ_DISTANCE",
         "android.permission.health.READ_EXERCISE",
+        "android.permission.health.READ_EXERCISE_ROUTE",
         "android.permission.health.READ_FLOORS_CLIMBED",
         "android.permission.health.READ_HEIGHT",
         "android.permission.health.READ_WEIGHT",
         "android.permission.health.READ_SPEED",
-        "android.permission.health.READ_FLOORS_CLIMBED"
+        "android.permission.health.READ_POWER"
       ]
     },
     "web": {

@@ -67,6 +67,14 @@ export const getRecordValue = (record: any, dataType: string): number => {
       return record.temperature?.inCelsius || 0;
     case 'oxygenSaturation':
       return record.percentage?.value || 0;
+    case 'power':
+      return record.power?.inWatts || 0;
+    case 'exerciseSession':
+    case 'workoutSession':
+      // For exercise sessions, return duration in seconds
+      const start = new Date(record.startTime);
+      const end = new Date(record.endTime);
+      return (end.getTime() - start.getTime()) / 1000;
     default:
       return record.value || record.count || record.amount || 0;
   }
@@ -104,6 +112,11 @@ export const getRecordUnit = (record: any, dataType: string): string => {
       return '°C';
     case 'oxygenSaturation':
       return '%';
+    case 'power':
+      return 'W';
+    case 'exerciseSession':
+    case 'workoutSession':
+      return 'seconds';
     default:
       return record.unit || 'unknown';
   }
@@ -139,6 +152,12 @@ export const mapToHealthConnectRecordType = (dataType: string): string => {
     'activeCalories': HEALTH_CONNECT_DATA_TYPES.ACTIVE_CALORIES,
     'totalCalories': HEALTH_CONNECT_DATA_TYPES.TOTAL_CALORIES,
     'calories': HEALTH_CONNECT_DATA_TYPES.ACTIVE_CALORIES,
+    'workoutSession': HEALTH_CONNECT_DATA_TYPES.EXERCISE_SESSION,
+    'exerciseSession': HEALTH_CONNECT_DATA_TYPES.EXERCISE_SESSION,
+    'speed': HEALTH_CONNECT_DATA_TYPES.SPEED,
+    'walkingSpeed': HEALTH_CONNECT_DATA_TYPES.SPEED,
+    'runningSpeed': HEALTH_CONNECT_DATA_TYPES.SPEED,
+    'power': HEALTH_CONNECT_DATA_TYPES.POWER,
     
     // Sleep
     'sleep': HEALTH_CONNECT_DATA_TYPES.SLEEP_SESSION,
@@ -155,8 +174,8 @@ export const mapToHealthConnectRecordType = (dataType: string): string => {
 /**
  * Maps generic health data types to Health Connect permissions
  */
-export const mapToHealthConnectPermission = (dataType: string): { accessType: string; recordType: string } => {
-  const mapping: Record<string, { accessType: string; recordType: string }> = {
+export const mapToHealthConnectPermission = (dataType: string) => {
+  const mapping: Record<string, { accessType: 'read'; recordType: any }> = {
     // Vital signs
     'heartRate': HEALTH_CONNECT_PERMISSIONS.HEART_RATE,
     'bloodPressure': HEALTH_CONNECT_PERMISSIONS.BLOOD_PRESSURE,
@@ -181,6 +200,12 @@ export const mapToHealthConnectPermission = (dataType: string): { accessType: st
     'activeCalories': HEALTH_CONNECT_PERMISSIONS.ACTIVE_CALORIES,
     'totalCalories': HEALTH_CONNECT_PERMISSIONS.TOTAL_CALORIES,
     'calories': HEALTH_CONNECT_PERMISSIONS.ACTIVE_CALORIES,
+    'workoutSession': HEALTH_CONNECT_PERMISSIONS.EXERCISE_SESSION,
+    'exerciseSession': HEALTH_CONNECT_PERMISSIONS.EXERCISE_SESSION,
+    'speed': HEALTH_CONNECT_PERMISSIONS.SPEED,
+    'walkingSpeed': HEALTH_CONNECT_PERMISSIONS.SPEED,
+    'runningSpeed': HEALTH_CONNECT_PERMISSIONS.SPEED,
+    'power': HEALTH_CONNECT_PERMISSIONS.POWER,
     
     // Sleep
     'sleep': HEALTH_CONNECT_PERMISSIONS.SLEEP_SESSION,
