@@ -3,6 +3,11 @@
 # dependencies
 node_modules/
 
+# Android build outputs
+*.apk
+*.aab
+
+
 # Expo
 .expo/
 dist/
