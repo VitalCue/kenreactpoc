@@ -7,7 +7,7 @@ import {
   getSdkStatus,
   SdkAvailabilityStatus,
 } from 'react-native-health-connect';
-import type { ReadRecordsOptions } from 'react-native-health-connect';
+import type { ReadRecordsOptions, RecordType } from 'react-native-health-connect';
 import { 
   HealthDataAdapter, 
   QueryParams, 
@@ -126,11 +126,11 @@ export const useHealthService = (): WorkoutHealthService => {
       const permissions = dataTypes ? 
         dataTypes.map(mapToHealthConnectPermission) : 
         [
-          { accessType: 'read' as const, recordType: 'Steps' as const },
-          { accessType: 'read' as const, recordType: 'Distance' as const },
-          { accessType: 'read' as const, recordType: 'TotalCaloriesBurned' as const },
-          { accessType: 'read' as const, recordType: 'ExerciseSession' as const },
-          { accessType: 'read' as const, recordType: 'HeartRate' as const },
+          { accessType: 'read' as const, recordType: 'Steps' as RecordType },
+          { accessType: 'read' as const, recordType: 'Distance' as RecordType },
+          { accessType: 'read' as const, recordType: 'TotalCaloriesBurned' as RecordType },
+          { accessType: 'read' as const, recordType: 'ExerciseSession' as RecordType },
+          { accessType: 'read' as const, recordType: 'HeartRate' as RecordType },
         ];
 
       const result = await requestPermission(permissions);
@@ -266,7 +266,7 @@ export const useHealthService = (): WorkoutHealthService => {
         };
       }
 
-      const recordType = 'ExerciseSession';
+      const recordType: RecordType = 'ExerciseSession';
       
       if (!params.startDate || !params.endDate) {
         throw new Error('startDate and endDate are required for Android Health Connect');
@@ -311,7 +311,7 @@ export const useHealthService = (): WorkoutHealthService => {
           uuid: record.recordId || `${record.startTime}-${record.endTime}-exercise`,
           deviceManf: record.device?.manufacturer || 'Unknown',
           deviceModel: record.device?.model || 'Unknown',
-          dataType: 'workoutSession',
+          dataType: 'workoutSession' as const,
           startDate: record.startTime,
           endDate: record.endTime,
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -480,10 +480,10 @@ export const useHealthService = (): WorkoutHealthService => {
             avgPower,
             maxPower,
             
-            heartRateRecords: metrics.heartRate,
-            distanceRecords: metrics.distance,
-            speedRecords: metrics.speed,
-            powerRecords: metrics.power
+            heartRateRecords: (metrics.heartRate || []).filter(r => r.dataType === 'heartRate') as any[],
+            distanceRecords: (metrics.distance || []).filter(r => r.dataType === 'distance') as any[],
+            speedRecords: (metrics.speed || []).filter(r => r.dataType === 'speed') as any[],
+            powerRecords: (metrics.power || []).filter(r => r.dataType === 'power') as any[]
           };
         })
       );
@@ -559,10 +559,10 @@ export const useHealthService = (): WorkoutHealthService => {
         avgPower,
         maxPower,
         
-        heartRateRecords: metrics.heartRate,
-        distanceRecords: metrics.distance,
-        speedRecords: metrics.speed,
-        powerRecords: metrics.power
+        heartRateRecords: (metrics.heartRate || []).filter(r => r.dataType === 'heartRate') as any[],
+        distanceRecords: (metrics.distance || []).filter(r => r.dataType === 'distance') as any[],
+        speedRecords: (metrics.speed || []).filter(r => r.dataType === 'speed') as any[],
+        powerRecords: (metrics.power || []).filter(r => r.dataType === 'power') as any[]
       };
     } catch (error) {
       console.error('Error fetching composite workout:', error);
@@ -685,7 +685,7 @@ export const useHealthService = (): WorkoutHealthService => {
       }
 
       // Get the raw Health Connect ExerciseSessionRecord
-      const recordType = 'ExerciseSession';
+      const recordType: RecordType = 'ExerciseSession';
       
       const timeRangeFilter = {
         operator: 'between' as const,
@@ -745,8 +745,8 @@ export const useHealthService = (): WorkoutHealthService => {
 };
 
 // Helper function to map generic data types to Health Connect record types
-const mapToHealthConnectRecordType = (dataType: string): string => {
-  const mapping: Record<string, string> = {
+const mapToHealthConnectRecordType = (dataType: string): RecordType => {
+  const mapping: Record<string, RecordType> = {
     'steps': 'Steps',
     'stepCount': 'Steps',
     'distance': 'Distance',
@@ -766,19 +766,19 @@ const mapToHealthConnectRecordType = (dataType: string): string => {
 
 // Helper function to map generic data types to Health Connect permissions  
 const mapToHealthConnectPermission = (dataType: string) => {
-  const mapping: Record<string, { accessType: 'read'; recordType: any }> = {
-    'steps': { accessType: 'read' as const, recordType: 'Steps' as const },
-    'distance': { accessType: 'read' as const, recordType: 'Distance' as const },
-    'calories': { accessType: 'read' as const, recordType: 'TotalCaloriesBurned' as const },
-    'activeCalories': { accessType: 'read' as const, recordType: 'ActiveCaloriesBurned' as const },
-    'walkingSpeed': { accessType: 'read' as const, recordType: 'Speed' as const },
-    'runningSpeed': { accessType: 'read' as const, recordType: 'Speed' as const },
-    'speed': { accessType: 'read' as const, recordType: 'Speed' as const },
-    'heartRate': { accessType: 'read' as const, recordType: 'HeartRate' as const },
-    'exerciseSession': { accessType: 'read' as const, recordType: 'ExerciseSession' as const },
-    'workoutSession': { accessType: 'read' as const, recordType: 'ExerciseSession' as const },
-    'power': { accessType: 'read' as const, recordType: 'Power' as const },
+  const mapping: Record<string, { accessType: 'read'; recordType: RecordType }> = {
+    'steps': { accessType: 'read' as const, recordType: 'Steps' },
+    'distance': { accessType: 'read' as const, recordType: 'Distance' },
+    'calories': { accessType: 'read' as const, recordType: 'TotalCaloriesBurned' },
+    'activeCalories': { accessType: 'read' as const, recordType: 'ActiveCaloriesBurned' },
+    'walkingSpeed': { accessType: 'read' as const, recordType: 'Speed' },
+    'runningSpeed': { accessType: 'read' as const, recordType: 'Speed' },
+    'speed': { accessType: 'read' as const, recordType: 'Speed' },
+    'heartRate': { accessType: 'read' as const, recordType: 'HeartRate' },
+    'exerciseSession': { accessType: 'read' as const, recordType: 'ExerciseSession' },
+    'workoutSession': { accessType: 'read' as const, recordType: 'ExerciseSession' },
+    'power': { accessType: 'read' as const, recordType: 'Power' },
   };
   
-  return mapping[dataType] || { accessType: 'read' as const, recordType: 'Steps' as const };
+  return mapping[dataType] || { accessType: 'read' as const, recordType: 'Steps' };
 };
