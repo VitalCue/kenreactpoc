@@ -293,7 +293,12 @@ export enum WorkoutExerciseType {
   MARTIAL_ARTS = 'martial_arts',
   BOXING = 'boxing',
   CLIMBING = 'climbing',
-  OTHER = 'other'
+  
+  // High Intensity
+  HIGH_INTENSITY_INTERVAL_TRAINING = 'high_intensity_interval_training',
+  
+  OTHER = 'other',
+  UNKNOWN = 'unknown'
 }
 
 /**

@@ -184,6 +184,7 @@ export const HEALTHKIT_QUANTITY_TYPES = {
  * Converts raw HealthKit HKWorkout to unified WorkoutSessionAdapter
  */
 export function adaptHealthKitWorkout(raw: RawWorkout): WorkoutSessionAdapter {
+  console.log("This activity type is being processed: ", raw.activityType)
   const exerciseType = HEALTHKIT_ACTIVITY_TYPE_MAP[raw.activityType] || WorkoutExerciseType.OTHER;
   
   return {

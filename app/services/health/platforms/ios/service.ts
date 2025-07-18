@@ -12,8 +12,8 @@ import type {
   HealthServiceHook, 
   HealthDataAdapter, 
   QueryParams
-} from '../../core/types';
-import { AuthorizationRequestStatus } from '../../core/types';
+} from '../../types';
+import { AuthorizationRequestStatus } from '../../types';
 import { convertSample, mapToHKDataType } from './mappers';
 import { HEALTHKIT_BASIC_PERMISSIONS } from './types';
 

@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useHealthService } from './services/health/ios';
+import { useHealthService } from './services/health';
 import { WorkoutSessionAdapter, CompositeWorkoutAdapter } from './services/health/workout/types';
 import { WorkoutExerciseType } from './services/health/workout/constants';
 import type { WorkoutHealthService } from './services/health/workout/queries';
@@ -19,7 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 export default function WorkoutDetailScreen() {
   const router = useRouter();
   const { workoutId } = useLocalSearchParams();
-  const healthService = useHealthService() as WorkoutHealthService;
+  const healthService = useHealthService();
   const [loading, setLoading] = useState(true);
   const [workout, setWorkout] = useState<CompositeWorkoutAdapter | null>(null);
   const [error, setError] = useState<string | null>(null);

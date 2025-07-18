@@ -1,15 +1,3 @@
-/**
- * @deprecated This file is deprecated. Use types from '../types/' instead.
- * 
- * All types have been moved to the organized types directory:
- * - Base types: ../types/base.ts
- * - Auth types: ../types/auth.ts
- * - Service types: ../types/service.ts
- * - Query types: ../types/query.ts
- * - Platform types: ../types/platform/
- * - Filter types: ../types/filters/
- */
-
 import type { AnyMap } from 'react-native-nitro-modules';
 
 /**
@@ -110,81 +98,12 @@ export interface AndroidDataCollector {
     readonly manufacturer?: string;
     readonly model?: string;
     readonly version?: string;
+    readonly platform?: string;
   };
 }
 
 /**
- * Authorization status enums
- */
-export enum AuthorizationRequestStatus {
-  unknown = 0,
-  shouldRequest = 1,
-  unnecessary = 2
-}
-
-export enum AuthorizationStatus {
-  notDetermined = 0,
-  sharingDenied = 1,
-  sharingAuthorized = 2
-}
-
-/**
- * Core health service interface
- */
-export interface HealthServiceHook {
-  isAvailable: boolean;
-  platform: 'ios' | 'android' | null;
-
-  authStatus: AuthorizationRequestStatus;
-  requestAuth: (dataTypes?: string[]) => Promise<AuthorizationRequestStatus>;
-  AuthorizationRequestStatus: typeof AuthorizationRequestStatus;
-  
-  // Basic query (returns normalized data)
-  getHealthData: (
-    dataType: string,
-    params: QueryParams
-  ) => Promise<HealthDataAdapter[]>;
-  
-  getBatchData: (
-    dataTypes: string[],
-    params: QueryParams
-  ) => Promise<Record<string, HealthDataAdapter[]>>;
-
-  // Platform-specific query (when you need full platform features)
-  getPlatformHealthData?: <T = any>(
-    dataType: string,
-    params: QueryParams
-  ) => Promise<T[]>;
-}
-
-/**
- * Base query parameters interface
- */
-export interface QueryParams {
-  // Common params
-  startDate?: Date;
-  endDate?: Date;
-  pageSize?: number;
-  
-  // iOS-specific query options
-  ios?: {
-    filter?: any; // FilterForSamples
-    anchor?: string;
-    limit?: number;
-    ascending?: boolean;
-    unit?: string;
-  };
-  
-  // Android-specific query options
-  android?: {
-    dataOriginFilter?: string[];
-    metadataFilter?: AnyMap;
-    pageToken?: string;
-  };
-}
-
-/**
- * Helper type guards
+ * Type guards for platform-specific data
  */
 export const isIOSData = (
   data: PlatformSpecificData

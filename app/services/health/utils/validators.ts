@@ -1,4 +1,4 @@
-import type { HealthDataAdapter } from '../core/types';
+import type { HealthDataAdapter } from '../types';
 
 /**
  * Health data validation utilities

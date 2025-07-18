@@ -5,6 +5,7 @@
 // ── Core Health System ─────────────────────────────────────────────────────────
 export * from './core';
 export * from './service';
+export * from './types';
 
 // Platform-specific exports commented out to avoid duplicates
 // export * from './platforms';
@@ -49,20 +50,7 @@ export {
   HealthQueryBuilder 
 } from './queries';
 
-// Core types
-export type { 
-  HealthDataAdapter, 
-  HealthServiceHook, 
-  QueryParams,
-  AuthorizationRequestStatus,
-  AuthorizationStatus,
-  PlatformSpecificData,
-  IOSHealthData,
-  AndroidHealthData,
-  IOSDevice,
-  IOSSourceRevision,
-  AndroidDataCollector
-} from './core/types';
+// Core types are now exported from './types' above
 
 // Health data constants
 export { 

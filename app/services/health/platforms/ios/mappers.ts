@@ -1,5 +1,5 @@
 import type { QuantitySample as HKQuantitySample } from '@kingstinct/react-native-healthkit';
-import type { HealthDataAdapter, IOSHealthData, PlatformSpecificData } from '../../core/types';
+import type { HealthDataAdapter, IOSHealthData, PlatformSpecificData } from '../../types';
 import type { HKDevice, HKSourceRevision } from './types';
 import { HEALTHKIT_DATA_TYPES } from './types';
 

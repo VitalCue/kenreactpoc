@@ -106,3 +106,20 @@ export const HEALTHKIT_BASIC_PERMISSIONS = [
   // Sleep
   HEALTHKIT_DATA_TYPES.SLEEP_ANALYSIS
 ] as const;
+
+/**
+ * Workout-specific permissions
+ */
+export const HEALTHKIT_WORKOUT_PERMISSIONS = [
+  'HKWorkoutTypeIdentifier',
+  'HKQuantityTypeIdentifierDistanceCycling',
+  'HKQuantityTypeIdentifierDistanceSwimming',
+  'HKQuantityTypeIdentifierCyclingSpeed',
+  'HKQuantityTypeIdentifierRunningSpeed',
+  'HKQuantityTypeIdentifierCyclingPower',
+  'HKQuantityTypeIdentifierCyclingCadence',
+  'HKQuantityTypeIdentifierRunningStrideLength',
+  'HKQuantityTypeIdentifierRunningVerticalOscillation',
+  'HKQuantityTypeIdentifierRunningGroundContactTime',
+  'HKQuantityTypeIdentifierRunningPower',
+] as const;

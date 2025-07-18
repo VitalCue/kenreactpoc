@@ -1,4 +1,4 @@
-import type { HealthServiceHook, HealthDataAdapter } from '../core/types';
+import type { HealthServiceHook, HealthDataAdapter } from '../types';
 
 /**
  * Date-based health data fetching utilities

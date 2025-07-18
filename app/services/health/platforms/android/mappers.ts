@@ -1,4 +1,4 @@
-import type { HealthDataAdapter, AndroidHealthData, PlatformSpecificData } from '../../core/types';
+import type { HealthDataAdapter, AndroidHealthData, PlatformSpecificData } from '../../types';
 import { HEALTH_CONNECT_DATA_TYPES, HEALTH_CONNECT_PERMISSIONS } from './types';
 
 /**

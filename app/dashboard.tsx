@@ -9,10 +9,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
-import { HealthServiceUtils } from './services/health';
-import { useHealthService as useIOSHealthService } from './services/health/ios';
-import { useHealthService as useAndroidHealthService } from './services/health/android';
-import type { WorkoutHealthService } from './services/health/workout/queries';
+import { HealthServiceUtils, useHealthService } from './services/health';
 import { HealthRing, HealthMetricCard } from './components/health';
 import { WeeklyChart } from './components/charts';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,11 +20,8 @@ import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function HealthDashboard() {
-  // Use the appropriate health service based on platform
-  const iosHealthService = useIOSHealthService();
-  const androidHealthService = useAndroidHealthService();
-  
-  const healthService = (Platform.OS === 'ios' ? iosHealthService : androidHealthService) as WorkoutHealthService;
+  // Use the unified health service (now includes workout methods)
+  const healthService = useHealthService();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [todayData, setTodayData] = useState<any>(null);
@@ -42,7 +36,7 @@ export default function HealthDashboard() {
       const [today, weekly, workouts] = await Promise.all([
         HealthServiceUtils.getTodaysData(healthService),
         HealthServiceUtils.getWeeklyData(healthService),
-        healthService.getWorkoutSessions(WorkoutQueries.recent(5)),
+        healthService.getWorkoutSessions(WorkoutQueries.recent(15)),
       ]);
 
       const todayStats = {
@@ -67,6 +61,7 @@ export default function HealthDashboard() {
       console.log('Today\'s data:', todayStats);
       console.log('Weekly data:', weeklyStats);
       console.log('Recent workouts found:', workouts.sessions?.length || 0);
+      console.log('Recent Workouts, Json',workouts.sessions )
       workouts.sessions?.forEach((session, index) => {
         console.log(`Workout ${index + 1} - Exercise Type: ${session.exerciseType}, Source: ${session.dataOrigin}`);
       });
@@ -409,9 +404,9 @@ export default function HealthDashboard() {
         
         {recentWorkouts.length > 0 ? (
           <View style={styles.workoutsContainer}>
-            {recentWorkouts.map((workout) => (
+            {recentWorkouts.map((workout, index) => (
               <TouchableOpacity
-                key={workout.uuid}
+                key={workout.uuid || `workout-${index}`}
                 style={styles.workoutCard}
                 onPress={() => handleWorkoutPress(workout)}
                 activeOpacity={0.7}
