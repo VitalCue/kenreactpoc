@@ -6,7 +6,7 @@ import {
   getSdkStatus,
   SdkAvailabilityStatus,
 } from 'react-native-health-connect';
-import type { ReadRecordsOptions } from 'react-native-health-connect';
+import type { ReadRecordsOptions, getChanges } from 'react-native-health-connect';
 import type { 
   HealthServiceHook, 
   HealthDataAdapter, 
@@ -17,6 +17,8 @@ import {
   convertRecord, 
   mapToHealthConnectRecordType
 } from './mappers';
+
+//Right now uses regular querying, future goal is to utilize .getChanges api to listen to changes and to automatically update
 
 
 export const useHealthService = (): HealthServiceHook => {

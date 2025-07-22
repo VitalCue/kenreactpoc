@@ -36,7 +36,7 @@ export default function HealthDashboard() {
       const [today, weekly, workouts] = await Promise.all([
         HealthServiceUtils.getTodaysData(healthService),
         HealthServiceUtils.getWeeklyData(healthService),
-        healthService.getWorkoutSessions(WorkoutQueries.recent(15)),
+        healthService.getWorkoutSessions(WorkoutQueries.recent(40)),
       ]);
 
       const todayStats = {

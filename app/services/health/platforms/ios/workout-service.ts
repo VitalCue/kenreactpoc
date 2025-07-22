@@ -2,7 +2,9 @@ import {
   isHealthDataAvailable,
   useHealthkitAuthorization,
   queryQuantitySamples,
-  queryWorkoutSamples
+  queryWorkoutSamples,
+  queryQuantitySamplesWithAnchor,
+  queryWorkoutSamplesWithAnchor
 } from '@kingstinct/react-native-healthkit';
 import type { 
   QuantitySample as HKQuantitySample, 
@@ -33,6 +35,9 @@ import type {
 import { AuthorizationRequestStatus } from '../../types';
 import { convertSample, mapToHKDataType } from './mappers';
 import { HEALTHKIT_BASIC_PERMISSIONS, HEALTHKIT_WORKOUT_PERMISSIONS } from './types';
+import { healthKitSyncManager } from '../../../../../src/services/healthkit/HealthKitSyncManager';
+import { anchorStore } from '../../../../../src/services/healthkit/AnchorStore';
+import { healthDataCache } from '../../../../../src/services/healthkit/HealthDataCache';
 import { 
   adaptHealthKitWorkout,
   buildCompositeWorkoutFromHealthKit, 
@@ -85,18 +90,69 @@ export const useWorkoutHealthService = (): WorkoutHealthService => {
     try {
       const hkDataType = mapToHKDataType(dataType) as QuantityTypeIdentifier;
       
-      const queryOptions: QueryOptionsWithSortOrderAndUnit = {
-        limit: params.pageSize || 100,
-        ascending: params.ios?.ascending ?? false,
-        unit: params.ios?.unit,
-        filter: params.ios?.filter || (params.startDate && params.endDate ? {
+      // Check if we should use anchored query
+      const hasAnchor = await anchorStore.getAnchor(hkDataType);
+      const isDateRangeQuery = params.startDate && params.endDate;
+      const useAnchoredQuery = hasAnchor !== null && !isDateRangeQuery && params.useAnchored !== false;
+      
+      if (useAnchoredQuery) {
+        console.log(`🔄 [WORKOUT SERVICE] Using CACHED/ANCHORED query for ${dataType} (anchor exists: ${hasAnchor !== null})`);
+        
+        // Use cached data with sync - returns immediately if cached data exists
+        const samples = await healthKitSyncManager.getCachedDataWithSync(hkDataType, {
+          unit: params.ios?.unit,
+          limit: params.pageSize || 100,
           startDate: params.startDate,
-          endDate: params.endDate
-        } : undefined)
-      };
+          endDate: params.endDate,
+        }, 30000); // 30 second cache max age for frequent requests
+        
+        // Convert samples to adapter format
+        const convertedSamples = samples.map(sample => 
+          convertSample(sample, dataType)
+        );
+        
+        return convertedSamples;
+      } else {
+        console.log(`📊 [WORKOUT SERVICE] Using REGULAR query for ${dataType} (${isDateRangeQuery ? 'date range query' : 'initial sync'})`);
+        // Use regular query for date ranges or initial setup
+        const queryOptions: QueryOptionsWithSortOrderAndUnit = {
+          limit: params.pageSize || 100,
+          ascending: params.ios?.ascending ?? false,
+          unit: params.ios?.unit,
+          filter: params.ios?.filter || (params.startDate && params.endDate ? {
+            startDate: params.startDate,
+            endDate: params.endDate
+          } : undefined)
+        };
 
-      const samples = await queryQuantitySamples(hkDataType, queryOptions);
-      return samples.map(sample => convertSample(sample, dataType));
+        const samples = await queryQuantitySamples(hkDataType, queryOptions);
+        
+        // Only cache and set up anchors for non-date-range queries
+        if (!isDateRangeQuery) {
+          // Cache the initial data
+          await healthDataCache.setCachedData(hkDataType, [...samples], {
+            startDate: params.startDate,
+            endDate: params.endDate,
+            limit: params.pageSize || 100,
+          });
+          
+          // After initial query, set up anchor for future syncs
+          if (params.setupAnchor !== false) {
+            try {
+              const anchorResponse = await queryQuantitySamplesWithAnchor(hkDataType, {
+                limit: 1,
+                unit: params.ios?.unit,
+              });
+              await anchorStore.setAnchor(hkDataType, anchorResponse.newAnchor);
+              console.log(`⚓ [WORKOUT SERVICE] Anchor set for ${dataType}`);
+            } catch (error) {
+              console.warn('Failed to setup anchor for', dataType, error);
+            }
+          }
+        }
+        
+        return samples.map(sample => convertSample(sample, dataType));
+      }
     } catch (error) {
       console.error('Error fetching health data:', error);
       return [];
@@ -130,18 +186,35 @@ export const useWorkoutHealthService = (): WorkoutHealthService => {
     try {
       const hkDataType = mapToHKDataType(dataType) as QuantityTypeIdentifier;
       
-      const queryOptions: QueryOptionsWithSortOrderAndUnit = {
-        limit: params.pageSize || 100,
-        ascending: params.ios?.ascending ?? false,
-        unit: params.ios?.unit,
-        filter: params.ios?.filter || (params.startDate && params.endDate ? {
+      // Check if we should use anchored query
+      const hasAnchor = await anchorStore.getAnchor(hkDataType);
+      const isDateRangeQuery = params.startDate && params.endDate;
+      
+      if (hasAnchor && !isDateRangeQuery && params.useAnchored !== false) {
+        console.log(`🔄 [WORKOUT SERVICE] Using ANCHORED platform query for ${dataType}`);
+        const syncResult = await healthKitSyncManager.syncQuantityData(hkDataType, {
+          unit: params.ios?.unit,
+          limit: params.pageSize || 100,
           startDate: params.startDate,
-          endDate: params.endDate
-        } : undefined)
-      };
+          endDate: params.endDate,
+        });
+        
+        return [...syncResult.newSamples]; // Return mutable copy
+      } else {
+        console.log(`📊 [WORKOUT SERVICE] Using REGULAR platform query for ${dataType} (${isDateRangeQuery ? 'date range query' : 'no anchor'})`);
+        const queryOptions: QueryOptionsWithSortOrderAndUnit = {
+          limit: params.pageSize || 100,
+          ascending: params.ios?.ascending ?? false,
+          unit: params.ios?.unit,
+          filter: params.ios?.filter || (params.startDate && params.endDate ? {
+            startDate: params.startDate,
+            endDate: params.endDate
+          } : undefined)
+        };
 
-      const samples = await queryQuantitySamples(hkDataType, queryOptions);
-      return [...samples]; // Convert readonly array to mutable
+        const samples = await queryQuantitySamples(hkDataType, queryOptions);
+        return [...samples]; // Convert readonly array to mutable
+      }
     } catch (error) {
       console.error('Error fetching platform health data:', error);
       return [];

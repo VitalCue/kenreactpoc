@@ -61,7 +61,7 @@ export default function Index() {
       );
 
       setHealthData(data);
-      console.log('Health data:', data);
+      
     } catch (err) {
       setError(`Error reading health data: ${err}`);
     } finally {
@@ -76,7 +76,7 @@ export default function Index() {
       
       const summary = await HealthServiceUtils.getHealthSummary(healthService);
       setHealthSummary(summary);
-      console.log("HealthSummary", JSON.stringify(summary))
+      
       
     } catch (err) {
       setError(`Error getting health summary: ${err}`);
