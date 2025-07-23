@@ -10,7 +10,12 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.kenreactpoc"
+      "bundleIdentifier": "com.anonymous.kenreactpoc",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "background-processing"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -50,6 +55,7 @@
         }
       ],
       "expo-health-connect",
+      "expo-task-manager",
       [
         "expo-build-properties",
         {
